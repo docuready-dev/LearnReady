@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer, Tooltip } from 'recharts';
-import { Download, Home, TrendingUp, Trophy, Users, GraduationCap } from 'lucide-react';
+import { Download, Home, TrendingUp, Trophy, Users, GraduationCap, User } from 'lucide-react';
 import { saveResult } from '../api/results';
 import { RiasecCode } from '../types';
 
@@ -137,8 +137,11 @@ export default function ResultsPage() {
             <Button variant="outline" size="sm" onClick={() => window.print()} className="cursor-pointer">
               <Download className="w-4 h-4 mr-1.5" />Download PDF
             </Button>
-            <Button variant="outline" size="sm" onClick={() => { resetExam(); setPage('landing'); }} className="cursor-pointer">
-              <Home className="w-4 h-4 mr-1.5" />New Assessment
+            <Button variant="outline" size="sm" onClick={() => setPage('profile')} className="cursor-pointer border-primary/30 text-primary hover:bg-primary/5">
+              <User className="w-4 h-4 mr-1.5" />My Profile
+            </Button>
+            <Button variant="default" size="sm" onClick={() => { resetExam(); setPage('landing'); }} className="cursor-pointer">
+              <Home className="w-4 h-4 mr-1.5" />Back to Home
             </Button>
           </div>
         </div>
@@ -317,6 +320,15 @@ export default function ResultsPage() {
             </div>
           </CardContent>
         </Card>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2 no-print">
+          <Button size="lg" className="w-full sm:w-auto cursor-pointer" onClick={() => { resetExam(); setPage('landing'); }}>
+            <Home className="w-4 h-4 mr-2" />Return to Home Launchpad
+          </Button>
+          <Button size="lg" variant="outline" className="w-full sm:w-auto cursor-pointer border-primary/30 text-primary hover:bg-primary/5" onClick={() => setPage('profile')}>
+            <User className="w-4 h-4 mr-2" />Open Candidate Profile & Records
+          </Button>
+        </div>
 
         <p className="text-center text-xs text-muted-foreground pb-4">
           Click "Download PDF" to save a branded report with full question review and step-by-step solutions.

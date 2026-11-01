@@ -1,7 +1,7 @@
 export type Domain = 'verbal' | 'numerical' | 'spatial' | 'personality';
 export type RiasecCode = 'R' | 'I' | 'A' | 'S' | 'E' | 'C';
 export type ProfileType = 'Analytical' | 'Creative' | 'Operational';
-export type Page = 'landing' | 'exam' | 'results' | 'admin' | 'login';
+export type Page = 'landing' | 'exam' | 'results' | 'admin' | 'login' | 'profile';
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
 export interface MCQOption {
@@ -96,4 +96,7 @@ export interface UserAccount {
   board?: string;
   school?: string;
   createdAt: string;
+  registeredAt?: number;
+  trialEndsAt?: number;
+  isPaidPro?: boolean;
 }

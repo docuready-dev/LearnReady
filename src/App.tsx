@@ -6,6 +6,7 @@ import ExamPage from './pages/ExamPage';
 import ResultsPage from './pages/ResultsPage';
 import AdminPage from './pages/AdminPage';
 import LoginPage from './pages/LoginPage';
+import ProfilePage from './pages/ProfilePage';
 import AdminMagicModal from './components/AdminMagicModal';
 import { Toaster } from '@/components/ui/sonner';
 
@@ -30,6 +31,7 @@ function AppContent() {
       {page === 'results' && <ResultsPage />}
       {page === 'admin' && <AdminPage />}
       {page === 'login' && <LoginPage />}
+      {page === 'profile' && <ProfilePage />}
       {page === 'landing' && <LandingPage />}
       <AdminMagicModal />
     </>

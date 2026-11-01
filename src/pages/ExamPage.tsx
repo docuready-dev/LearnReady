@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle2, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const LOGO_URL = `${import.meta.env.BASE_URL}logo.svg`;
@@ -98,7 +98,19 @@ export default function ExamPage() {
               );
             })}
           </div>
-          <div className="flex-shrink-0"><Timer seconds={timeRemaining} /></div>
+          <div className="flex-shrink-0 flex items-center gap-2">
+            <Timer seconds={timeRemaining} />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setPage('landing')}
+              className="text-xs h-8 px-2 text-muted-foreground hover:text-foreground cursor-pointer"
+              title="Pause and return to Home (Progress saved)"
+            >
+              <Home className="w-3.5 h-3.5 sm:mr-1" />
+              <span className="hidden sm:inline">Home</span>
+            </Button>
+          </div>
         </div>
         <div className="max-w-4xl mx-auto px-4 pb-2 flex items-center gap-2">
           <Progress value={progress} className="flex-1 h-1.5" />

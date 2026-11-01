@@ -21,7 +21,8 @@ import {
   BarChart3,
   BookOpen,
   Phone,
-  GraduationCap
+  GraduationCap,
+  Clock
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -121,7 +122,7 @@ export default function LoginPage() {
         school: regSchool.trim() || undefined,
       });
       setIsSubmitting(false);
-      toast.success(`Account created successfully! Welcome, ${regName}!`);
+      toast.success(`Account created! Welcome to your 7-Day Free Trial, ${regName}!`);
       setPage('landing');
     }, 400);
   }
@@ -148,7 +149,10 @@ export default function LoginPage() {
 
             <div className="flex flex-col gap-2 pt-2">
               <Button className="w-full cursor-pointer" onClick={() => setPage('landing')}>
-                <Home className="w-4 h-4 mr-2" />Go to Assessment Launchpad
+                <Home className="w-4 h-4 mr-2" />Go to Home / Assessment
+              </Button>
+              <Button variant="outline" className="w-full cursor-pointer border-primary/30 text-primary hover:bg-primary/5" onClick={() => setPage('profile')}>
+                <User className="w-4 h-4 mr-2" />Go to My Profile & Results
               </Button>
               {user.role === 'admin' && (
                 <Button variant="outline" className="w-full cursor-pointer" onClick={() => setPage('admin')}>
@@ -359,6 +363,19 @@ export default function LoginPage() {
                 ) : (
                   /* REGISTER FORM */
                   <form onSubmit={handleRegister} className="space-y-3.5">
+                    {/* 7-Day Free Trial Notice */}
+                    <div className="rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-50/70 dark:bg-blue-950/30 p-3 text-left space-y-1">
+                      <div className="flex items-center gap-1.5 text-blue-700 dark:text-blue-300 font-semibold text-xs">
+                        <Clock className="w-3.5 h-3.5" />
+                        <span>Includes 7-Day Free Candidate Trial</span>
+                        <Badge variant="outline" className="text-2xs bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-200 border-0 ml-auto">
+                          Trial Active
+                        </Badge>
+                      </div>
+                      <p className="text-2xs text-muted-foreground leading-relaxed text-justify">
+                        All registrations start with an unrestricted 7-day trial period. After the 7-day trial, candidates can unlock all subjects' chapterwise question banks with verified answer keys for a one-time fee of ₹899/- INR.
+                      </p>
+                    </div>
                     <div className="space-y-1.5">
                       <Label className="text-xs font-semibold flex items-center gap-1.5">
                         <User className="w-3.5 h-3.5 text-muted-foreground" />Student Full Name *

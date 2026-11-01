@@ -11,6 +11,9 @@ export interface User {
   grade?: string;
   board?: string;
   school?: string;
+  registeredAt?: number;
+  trialEndsAt?: number;
+  isPaidPro?: boolean;
 }
 
 interface AuthContextValue {
@@ -26,6 +29,8 @@ interface AuthContextValue {
   verifyMagicToken: (token: string, email: string) => boolean;
   login: (email: string, name?: string) => void;
   register: (data: { name: string; email: string; phone?: string; grade?: string; board?: string; school?: string }) => void;
+  updateProfile: (data: { name?: string; grade?: string; board?: string; school?: string }) => void;
+  upgradeToPro: () => void;
   loginWithRedirect: (customEmail?: string) => void;
   loginAsAdmin: () => void;
   logout: () => void;
@@ -62,14 +67,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = (email: string, name?: string) => {
     const isTargetAdmin = email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
     const existing = StorageService.findUserByEmail(email);
+    const now = Date.now();
 
     const sessionUser: User = {
       email: email.trim(),
+      phone: existing?.phone,
       name: name || existing?.name || (isTargetAdmin ? 'Ashley Ghose' : email.split('@')[0]),
       role: isTargetAdmin ? 'admin' : 'candidate',
       grade: existing?.grade,
       board: existing?.board,
       school: existing?.school,
+      registeredAt: existing?.registeredAt || now,
+      trialEndsAt: existing?.trialEndsAt || (now + 7 * 24 * 60 * 60 * 1000),
+      isPaidPro: existing?.isPaidPro || false,
     };
 
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(sessionUser));
@@ -78,6 +88,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = (data: { name: string; email: string; phone?: string; grade?: string; board?: string; school?: string }) => {
     const isTargetAdmin = data.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    const now = Date.now();
+    const registeredAt = now;
+    const trialEndsAt = now + 7 * 24 * 60 * 60 * 1000;
+
     StorageService.saveUserAccount({
       name: data.name,
       email: data.email,
@@ -86,6 +100,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       grade: data.grade,
       board: data.board,
       school: data.school,
+      registeredAt,
+      trialEndsAt,
+      isPaidPro: false,
     });
 
     const sessionUser: User = {
@@ -96,10 +113,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       grade: data.grade,
       board: data.board,
       school: data.school,
+      registeredAt,
+      trialEndsAt,
+      isPaidPro: false,
     };
 
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(sessionUser));
     setUser(sessionUser);
+  };
+
+  const updateProfile = (data: { name?: string; grade?: string; board?: string; school?: string }) => {
+    if (!user) return;
+    const updatedUser: User = {
+      ...user,
+      name: data.name !== undefined ? data.name : user.name,
+      grade: data.grade !== undefined ? data.grade : user.grade,
+      board: data.board !== undefined ? data.board : user.board,
+      school: data.school !== undefined ? data.school : user.school,
+    };
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(updatedUser));
+    setUser(updatedUser);
+    StorageService.saveUserAccount(updatedUser as any);
+  };
+
+  const upgradeToPro = () => {
+    if (!user) return;
+    const updatedUser: User = {
+      ...user,
+      isPaidPro: true,
+    };
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(updatedUser));
+    setUser(updatedUser);
+    StorageService.saveUserAccount(updatedUser as any);
   };
 
   const sendAdminMagicLink = (email: string) => {
@@ -214,6 +259,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         verifyMagicToken,
         login,
         register,
+        updateProfile,
+        upgradeToPro,
         loginWithRedirect,
         loginAsAdmin,
         logout,

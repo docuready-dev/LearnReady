@@ -8,10 +8,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Clock, BarChart3, Brain, ArrowRight, RotateCcw, GraduationCap, Zap, BookOpen, CheckCircle2, User, LogIn, UserPlus, UserCheck } from 'lucide-react';
+import { Clock, BarChart3, Brain, ArrowRight, RotateCcw, GraduationCap, Zap, BookOpen, CheckCircle2, User, LogIn, UserPlus, UserCheck, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TestMode } from '../types';
 import { INDIAN_BOARDS } from '../data/boards';
+import PaymentModal from '../components/PaymentModal';
 
 const LOGO_URL = `${import.meta.env.BASE_URL}logo.svg`;
 const DRAFT_FORM_KEY = 'learnready_landing_draft';
@@ -105,7 +106,48 @@ export default function LandingPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showResumeDialog, setShowResumeDialog] = useState(false);
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const hasExistingExam = state.startTime > 0 && !state.completed;
+
+  // Real-time trial countdown timer
+  const [trialTimeLeft, setTrialTimeLeft] = useState<{
+    diff: number;
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+    isExpired: boolean;
+  } | null>(() => {
+    if (!user || user.isPaidPro) return null;
+    const end = user.trialEndsAt || (user.registeredAt ? user.registeredAt + 7 * 24 * 60 * 60 * 1000 : Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const diff = Math.max(0, end - Date.now());
+    const days = Math.floor(diff / (24 * 60 * 60 * 1000));
+    const hours = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+    const minutes = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
+    const seconds = Math.floor((diff % (60 * 1000)) / 1000);
+    return { diff, days, hours, minutes, seconds, isExpired: diff === 0 };
+  });
+
+  useEffect(() => {
+    if (!user || user.isPaidPro) {
+      setTrialTimeLeft(null);
+      return;
+    }
+
+    function calculateTime() {
+      const end = user!.trialEndsAt || (user!.registeredAt ? user!.registeredAt + 7 * 24 * 60 * 60 * 1000 : Date.now() + 7 * 24 * 60 * 60 * 1000);
+      const diff = Math.max(0, end - Date.now());
+      const days = Math.floor(diff / (24 * 60 * 60 * 1000));
+      const hours = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+      const minutes = Math.floor((diff % (60 * 1000)) / (60 * 1000));
+      const seconds = Math.floor((diff % (60 * 1000)) / 1000);
+      setTrialTimeLeft({ diff, days, hours, minutes, seconds, isExpired: diff === 0 });
+    }
+
+    calculateTime();
+    const interval = setInterval(calculateTime, 1000);
+    return () => clearInterval(interval);
+  }, [user]);
 
   const isQuickEligible = QUICK_ELIGIBLE.includes(form.educationLevel);
 
@@ -173,9 +215,28 @@ export default function LandingPage() {
             </Badge>
             {user ? (
               <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="text-xs hidden sm:flex items-center gap-1">
-                  <User className="w-3 h-3 text-primary" />{user.name || user.email.split('@')[0]}
-                </Badge>
+                {user.isPaidPro ? (
+                  <Badge className="bg-emerald-600 text-white border-0 text-2xs hidden sm:flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3" />Pro Member
+                  </Badge>
+                ) : trialTimeLeft ? (
+                  <Badge variant="outline" className="bg-amber-50 text-amber-900 border-amber-300 text-2xs hidden sm:flex items-center gap-1">
+                    <Clock className="w-3 h-3 text-amber-600 animate-pulse" />
+                    Trial: {trialTimeLeft.days}d {trialTimeLeft.hours}h {trialTimeLeft.minutes}m
+                  </Badge>
+                ) : null}
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage('profile')}
+                  className="text-xs h-8 px-2.5 font-medium border-primary/30 text-primary hover:bg-primary/5 cursor-pointer flex items-center gap-1.5"
+                >
+                  <User className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">My Profile & Results</span>
+                  <span className="sm:hidden">Profile</span>
+                </Button>
+
                 <button
                   onClick={() => logout()}
                   className="text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded hover:bg-muted cursor-pointer"
@@ -226,6 +287,77 @@ export default function LandingPage() {
             <span className="flex items-center gap-1.5"><BarChart3 className="w-4 h-4 text-primary" />{displayQuestions}</span>
             <span className="flex items-center gap-1.5"><Brain className="w-4 h-4 text-primary" />Unique randomisation</span>
           </div>
+
+          {/* 7-Day Free Trial / Pro Membership Dashboard Banner */}
+          {user && (
+            <div className="rounded-xl border border-border bg-card p-4 shadow-sm text-left space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-3">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                    user.isPaidPro ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300' : 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
+                  }`}>
+                    {user.isPaidPro ? <CheckCircle2 className="w-5 h-5" /> : <Clock className="w-5 h-5" />}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-sm font-bold text-foreground">
+                        {user.isPaidPro ? 'Pro Membership Active' : '7-Day Free Candidate Trial'}
+                      </h3>
+                      {user.isPaidPro ? (
+                        <Badge className="bg-emerald-600 text-white text-2xs">Unlimited</Badge>
+                      ) : (
+                        <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300 text-2xs">
+                          {trialTimeLeft?.isExpired ? 'Trial Expired' : 'Active'}
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-2xs text-muted-foreground mt-0.5">
+                      {user.isPaidPro
+                        ? 'Full access to all diagnostic batteries and chapterwise question banks.'
+                        : 'Unrestricted access to all diagnostic batteries, AI profiling & national percentiles.'}
+                    </p>
+                  </div>
+                </div>
+
+                {!user.isPaidPro && trialTimeLeft && (
+                  <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-lg px-3 py-1.5 text-center sm:text-right shrink-0">
+                    <span className="text-2xs font-semibold uppercase text-amber-800 dark:text-amber-300 tracking-wider block">Trial Countdown</span>
+                    <span className="text-xs font-mono font-bold text-amber-950 dark:text-amber-100">
+                      {trialTimeLeft.days}d {trialTimeLeft.hours}h {trialTimeLeft.minutes}m {trialTimeLeft.seconds}s
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-0.5">
+                <p className="text-xs text-muted-foreground text-left sm:text-justify leading-relaxed">
+                  {user.isPaidPro
+                    ? 'All subjects\' chapterwise question banks with verified step-by-step answer keys are available in your Profile section.'
+                    : 'After your 7-day trial, unlock all subjects\' chapterwise question banks with verified step-by-step answer keys for a one-time fee of ₹899/- INR.'}
+                </p>
+                <div className="flex items-center gap-2 shrink-0">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs cursor-pointer border-primary/30 text-primary hover:bg-primary/5"
+                    onClick={() => setPage('profile')}
+                  >
+                    View in Profile
+                  </Button>
+                  {!user.isPaidPro && (
+                    <Button
+                      size="sm"
+                      className="text-xs cursor-pointer font-semibold bg-gradient-to-r from-primary to-blue-700 text-white flex items-center gap-1.5 shadow-sm"
+                      onClick={() => setShowPaymentModal(true)}
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                      Unlock Banks (₹899)
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           <Card className="shadow-sm">
             <CardContent className="pt-6 space-y-4">
@@ -432,6 +564,16 @@ export default function LandingPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Chapterwise Question Bank ₹899 Payment Modal */}
+      <PaymentModal
+        open={showPaymentModal}
+        onOpenChange={setShowPaymentModal}
+        onSuccess={() => {
+          setShowPaymentModal(false);
+          setPage('profile');
+        }}
+      />
     </div>
   );
 }
