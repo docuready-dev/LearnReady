@@ -73,31 +73,19 @@ In secondary education across India, selecting an academic stream (Science PCM, 
 
 ---
 
-## 📸 Visual Showcase
+## 🖥️ Application Views & User Journey
 
-<div align="center">
-
-| Assessment Launchpad | Section 1: Verbal Reasoning |
-|:---:|:---:|
-| ![Landing Page](screenshot-01-landing-page.png) | ![Verbal Reasoning](screenshot-03-exam-verbal-reasoning.png) |
-| *Hero overview, board selection & test modes* | *Live timer, passage context & question tracker* |
-
-| Section 4: RIASEC Profiling | Top Diagnostic Results |
-|:---:|:---:|
-| ![RIASEC Assessment](screenshot-06-exam-occupational-interests.png) | ![Results Dashboard](screenshot-08-results-top-stream-recommendations.png) |
-| *5-point Likert psychometric interest battery* | *National percentile rank & stream recommendations* |
-
-| National Bell Curve & Leaderboard | Super Admin Login & Gateway |
-|:---:|:---:|
-| ![Bell Curve](screenshot-10-results-bellcurve-and-leaderboard.png) | ![Admin Login](screenshot-12-admin-login.png) |
-| *Gaussian distribution with candidate marker* | *Secure credential gate with quick simulated login* |
-
-| Super Admin National Dashboard | Filtered Board Telemetry View |
-|:---:|:---:|
-| ![Admin Dashboard](screenshot-14-admin-dashboard.png) | ![Admin Filtered](screenshot-15-admin-dashboard-filtered.png) |
-| *Cohort metrics, board charts & candidate table* | *Live search, board filters & CSV report export* |
-
-</div>
+| Screen / View | Primary Purpose & Functional Highlights |
+|---|---|
+| **Assessment Launchpad** | Candidate profile intake, Indian board selection (CBSE, ICSE, State Boards, IB), and test duration selection (Full 90-min vs Quick 30-min). |
+| **Candidate Auth Portal** | Dual-tab Sign In & Registration system supporting student self-registration and Super Admin instant login. |
+| **Verbal Reasoning Battery** | Reading comprehension passages, verbal analogies, grammatical precision, and vocabulary logic with real-time countdown timer. |
+| **Numerical Reasoning Battery** | Arithmetic progressions, algebra, data interpretation, percentages, and scratchpad calculations. |
+| **Spatial Reasoning Battery** | 2D/3D net folding, symmetrical pattern rotations, and spatial orientation challenges. |
+| **Occupational RIASEC Battery** | 5-point Likert psychometric scale measuring vocational interest across 6 Holland dimensions. |
+| **Diagnostic Results Hub** | All-India percentile rank, domain radar charts, Gaussian bell curve placement, and deterministic Class 11–12 stream matching. |
+| **Printable Report Engine** | Pure CSS `@media print` formatted multi-page diagnostic dossier with detailed question-by-question solution breakdowns. |
+| **Super Admin Operations Suite** | Protected management portal featuring aggregate board comparison charts, candidate search/filter table, and one-click CSV export. |
 
 ---
 
