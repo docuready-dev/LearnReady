@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
-const LOGO_URL = '/logo.svg';
+const LOGO_URL = `${import.meta.env.BASE_URL}logo.svg`;
 
 const EDUCATION_LEVELS = [
   'Class 9',

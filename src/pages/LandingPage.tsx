@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 import { TestMode } from '../types';
 import { INDIAN_BOARDS } from '../data/boards';
 
-const LOGO_URL = '/logo.svg';
+const LOGO_URL = `${import.meta.env.BASE_URL}logo.svg`;
 
 const REGIONS = ['North India', 'Northeast India', 'East India', 'Central India', 'West India', 'South India', 'International'];
 const EDUCATION_LEVELS = ['Class 9', 'Class 10 (Current)', 'Class 11', 'Class 12', 'Undergraduate', 'Graduate'];

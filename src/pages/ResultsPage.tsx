@@ -16,7 +16,7 @@ import { Download, Home, TrendingUp, Trophy, Users, GraduationCap, Shield } from
 import { saveResult } from '../api/results';
 import { RiasecCode } from '../types';
 
-const LOGO_URL = '/logo.svg';
+const LOGO_URL = `${import.meta.env.BASE_URL}logo.svg`;
 
 const RIASEC_LABELS: Record<RiasecCode, string> = {
   R: 'Realistic', I: 'Investigative', A: 'Artistic', S: 'Social', E: 'Enterprising', C: 'Conventional',

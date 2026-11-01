@@ -5,7 +5,7 @@ import { getSessionQuestions } from '../data/randomizer';
 import { getBoardLabel } from '../data/boards';
 import { PROFILE_DESCRIPTIONS, STREAM_DATA, StreamRecommendation, StreamType } from '../utils/scoring';
 
-const LOGO_URL = '/logo.svg';
+const LOGO_URL = `${import.meta.env.BASE_URL}logo.svg`;
 
 const DOMAIN_META: Record<string, { label: string; color: string; light: string }> = {
   verbal:      { label: 'Verbal Reasoning',                 color: '#1d4ed8', light: '#eff6ff' },

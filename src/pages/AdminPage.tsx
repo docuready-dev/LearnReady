@@ -15,7 +15,7 @@ import { Users, BarChart3, Trophy, Shield, ShieldOff, Trash2, LogOut, Home, Sear
 import { toast } from 'sonner';
 import { ExamResultRecord } from '../types';
 
-const LOGO_URL = '/logo.svg';
+const LOGO_URL = `${import.meta.env.BASE_URL}logo.svg`;
 const BOARDS = ['CBSE', 'ICSE', 'STATE_MH', 'STATE_WB', 'STATE_DL', 'STATE_TN', 'STATE_KA', 'STATE_OTHER', 'IB', 'IGCSE'];
 
 type Result = ExamResultRecord;

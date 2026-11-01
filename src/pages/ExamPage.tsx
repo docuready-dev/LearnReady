@@ -11,7 +11,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const LOGO_URL = '/logo.svg';
+const LOGO_URL = `${import.meta.env.BASE_URL}logo.svg`;
 
 const colorMap: Record<string, string> = {
   blue: 'bg-blue-100 text-blue-800 border-blue-200',
