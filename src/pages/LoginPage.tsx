@@ -35,10 +35,16 @@ const EDUCATION_LEVELS = [
 ];
 
 export default function LoginPage() {
-  const { user, login, register, loginAsAdmin } = useAuth();
+  const { user, login, register, loginAsAdmin, authTab, setAuthTab } = useAuth();
   const { setPage } = useExam();
 
-  const [mode, setMode] = useState<'login' | 'register'>('login');
+  const [mode, setMode] = useState<'login' | 'register'>(authTab || 'login');
+
+  React.useEffect(() => {
+    if (authTab) {
+      setMode(authTab);
+    }
+  }, [authTab]);
   const [showPassword, setShowPassword] = useState(false);
 
   // Login form
@@ -266,7 +272,7 @@ export default function LoginPage() {
                 <div className="grid grid-cols-2 gap-1 bg-muted p-1 rounded-lg mt-3">
                   <button
                     type="button"
-                    onClick={() => { setMode('login'); setErrors({}); }}
+                    onClick={() => { setMode('login'); setAuthTab('login'); setErrors({}); }}
                     className={`py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer ${
                       mode === 'login' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
                     }`}
@@ -275,7 +281,7 @@ export default function LoginPage() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => { setMode('register'); setErrors({}); }}
+                    onClick={() => { setMode('register'); setAuthTab('register'); setErrors({}); }}
                     className={`py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer ${
                       mode === 'register' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
                     }`}

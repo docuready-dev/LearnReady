@@ -15,6 +15,8 @@ export interface User {
 interface AuthContextValue {
   user: User | null;
   isLoading: boolean;
+  authTab: 'login' | 'register';
+  setAuthTab: (tab: 'login' | 'register') => void;
   login: (email: string, name?: string) => void;
   register: (data: { name: string; email: string; grade?: string; board?: string; school?: string }) => void;
   loginWithRedirect: (customEmail?: string) => void;
@@ -29,6 +31,7 @@ const AUTH_STORAGE_KEY = 'learnready_auth_session';
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
 
   useEffect(() => {
     try {
@@ -99,7 +102,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, loginWithRedirect, loginAsAdmin, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, authTab, setAuthTab, login, register, loginWithRedirect, loginAsAdmin, logout }}>
       {children}
     </AuthContext.Provider>
   );

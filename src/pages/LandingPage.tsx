@@ -8,12 +8,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Clock, BarChart3, Brain, ArrowRight, RotateCcw, GraduationCap, Zap, BookOpen, CheckCircle2, User } from 'lucide-react';
+import { Clock, BarChart3, Brain, ArrowRight, RotateCcw, GraduationCap, Zap, BookOpen, CheckCircle2, User, LogIn, UserPlus, UserCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TestMode } from '../types';
 import { INDIAN_BOARDS } from '../data/boards';
 
 const LOGO_URL = `${import.meta.env.BASE_URL}logo.svg`;
+const DRAFT_FORM_KEY = 'learnready_landing_draft';
 
 const REGIONS = ['North India', 'Northeast India', 'East India', 'Central India', 'West India', 'South India', 'International'];
 const EDUCATION_LEVELS = ['Class 9', 'Class 10 (Current)', 'Class 11', 'Class 12', 'Undergraduate', 'Graduate'];
@@ -51,16 +52,39 @@ const MODES: { id: TestMode; icon: any; title: string; time: string; questions: 
 
 export default function LandingPage() {
   const { startExam, setPage, state, resetExam } = useExam();
-  const { user, logout } = useAuth();
-  const [form, setFormState] = useState({
-    name: state.name || user?.name || '',
-    age: state.age || '',
-    region: state.region || '',
-    educationLevel: state.educationLevel || user?.grade || '',
-    board: state.board || user?.board || '',
-    candidateId: state.candidateId || '',
-    email: state.email || user?.email || '',
+  const { user, logout, setAuthTab } = useAuth();
+  const [form, setFormState] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem(DRAFT_FORM_KEY);
+      if (saved) {
+        const p = JSON.parse(saved);
+        return {
+          name: p.name || state.name || user?.name || '',
+          age: p.age || state.age || '',
+          region: p.region || state.region || '',
+          educationLevel: p.educationLevel || state.educationLevel || user?.grade || '',
+          board: p.board || state.board || user?.board || '',
+          candidateId: p.candidateId || state.candidateId || '',
+          email: p.email || state.email || user?.email || '',
+        };
+      }
+    } catch {}
+    return {
+      name: state.name || user?.name || '',
+      age: state.age || '',
+      region: state.region || '',
+      educationLevel: state.educationLevel || user?.grade || '',
+      board: state.board || user?.board || '',
+      candidateId: state.candidateId || '',
+      email: state.email || user?.email || '',
+    };
   });
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(DRAFT_FORM_KEY, JSON.stringify(form));
+    } catch {}
+  }, [form]);
 
   useEffect(() => {
     if (user) {
@@ -73,9 +97,11 @@ export default function LandingPage() {
       }));
     }
   }, [user]);
+
   const [testMode, setTestMode] = useState<TestMode>('full');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showResumeDialog, setShowResumeDialog] = useState(false);
+  const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const hasExistingExam = state.startTime > 0 && !state.completed;
 
   const isQuickEligible = QUICK_ELIGIBLE.includes(form.educationLevel);
@@ -108,6 +134,10 @@ export default function LandingPage() {
   }
 
   function handleStart() {
+    if (!user) {
+      setShowAuthPrompt(true);
+      return;
+    }
     if (!validate()) return;
     if (hasExistingExam) {
       setShowResumeDialog(true);
@@ -298,7 +328,15 @@ export default function LandingPage() {
 
               {hasExistingExam ? (
                 <div className="flex gap-2 pt-1">
-                  <Button className="flex-1" onClick={() => setPage('exam')}><ArrowRight className="w-4 h-4 mr-2" />Resume Assessment</Button>
+                  <Button className="flex-1" onClick={() => {
+                    if (!user) {
+                      setShowAuthPrompt(true);
+                      return;
+                    }
+                    setPage('exam');
+                  }}>
+                    <ArrowRight className="w-4 h-4 mr-2" />Resume Assessment
+                  </Button>
                   <Button variant="outline" onClick={() => resetExam()}><RotateCcw className="w-4 h-4 mr-1" />Restart</Button>
                 </div>
               ) : (
@@ -313,6 +351,54 @@ export default function LandingPage() {
           </p>
         </div>
       </main>
+
+      <AlertDialog open={showAuthPrompt} onOpenChange={setShowAuthPrompt}>
+        <AlertDialogContent className="sm:max-w-md">
+          <AlertDialogHeader className="text-center sm:text-center space-y-2">
+            <div className="w-12 h-12 rounded-full bg-primary/10 text-primary mx-auto flex items-center justify-center mb-1">
+              <UserCheck className="w-6 h-6" />
+            </div>
+            <AlertDialogTitle className="text-xl font-bold">Sign In or Register Required</AlertDialogTitle>
+            <AlertDialogDescription className="text-sm text-muted-foreground">
+              No active student account was detected. Please sign in or register to record your diagnostic answers, benchmark your national percentile, and access your personalized stream recommendations.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="flex flex-col gap-2.5 pt-3">
+            <Button
+              className="w-full flex items-center justify-center gap-2 cursor-pointer"
+              size="lg"
+              onClick={() => {
+                setShowAuthPrompt(false);
+                setAuthTab('login');
+                setPage('login');
+              }}
+            >
+              <LogIn className="w-4 h-4" />
+              Sign In to Existing Account
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full flex items-center justify-center gap-2 border-primary/30 text-primary hover:bg-primary/5 cursor-pointer"
+              size="lg"
+              onClick={() => {
+                setShowAuthPrompt(false);
+                setAuthTab('register');
+                setPage('login');
+              }}
+            >
+              <UserPlus className="w-4 h-4" />
+              Register New Student Account
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full text-xs text-muted-foreground hover:text-foreground mt-1 cursor-pointer"
+              onClick={() => setShowAuthPrompt(false)}
+            >
+              Cancel & Stay on Overview
+            </Button>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <AlertDialog open={showResumeDialog} onOpenChange={setShowResumeDialog}>
         <AlertDialogContent>
