@@ -72,7 +72,7 @@ export function useExamState() {
     phone: string = ''
   ) => {
     const startTime = Date.now();
-    const questionIds = generateSessionQuestions(candidateId, startTime, testMode);
+    const questionIds = generateSessionQuestions(candidateId, startTime, testMode, educationLevel, board);
     setState({
       ...defaultState,
       candidateId,

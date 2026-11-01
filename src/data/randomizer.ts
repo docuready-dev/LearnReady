@@ -31,20 +31,56 @@ function fisherYates<T>(arr: T[], rand: () => number): T[] {
 }
 
 /**
- * "Unique-Max" Algorithm: select `count` questions from `pool` while
- * preserving difficulty distribution: easy ~33%, medium ~47%, hard ~20%.
- * Falls back to any available question if a tier is under-stocked.
+ * Determine difficulty proportion according to academic class / level.
+ * Real-time academic scenario calibration:
+ * - Class 9: Foundational curriculum (50% easy, 40% medium, 10% hard)
+ * - Class 10: Secondary board standard (35% easy, 45% medium, 20% hard)
+ * - Class 11: Higher secondary transition (25% easy, 50% medium, 25% hard)
+ * - Class 12: Senior board & competitive prep (15% easy, 50% medium, 35% hard)
+ * - Higher Ed (UG / Grad / Dropper): Advanced aptitude & analytical reasoning (10% easy, 45% medium, 45% hard)
  */
-function selectWithDifficulty(pool: Question[], count: number, rand: () => number): string[] {
+function getDifficultyRatios(educationLevel: string = 'Class 10') {
+  const l = educationLevel.toLowerCase();
+  if (l.includes('class 9')) {
+    return { easy: 0.50, medium: 0.40, hard: 0.10 };
+  } else if (l.includes('class 10')) {
+    return { easy: 0.35, medium: 0.45, hard: 0.20 };
+  } else if (l.includes('class 11')) {
+    return { easy: 0.25, medium: 0.50, hard: 0.25 };
+  } else if (l.includes('class 12')) {
+    return { easy: 0.15, medium: 0.50, hard: 0.35 };
+  } else {
+    // Undergraduate / Graduate / Dropper
+    return { easy: 0.10, medium: 0.45, hard: 0.45 };
+  }
+}
+
+/**
+ * Select questions with cognitive difficulty tailored to level and board curriculum.
+ */
+function selectWithLevelAndBoard(
+  pool: Question[],
+  count: number,
+  rand: () => number,
+  educationLevel: string = 'Class 10',
+  board: string = 'CBSE'
+): string[] {
+  const ratios = getDifficultyRatios(educationLevel);
+  const isHighRigorBoard = ['ICSE', 'IB', 'IGCSE', 'INI_CENTRAL', 'BCI_LAW'].includes(board);
+
+  // Board-specific weighting: high-rigor boards shift +5% towards hard
+  const hardRatio = isHighRigorBoard ? Math.min(0.50, ratios.hard + 0.05) : ratios.hard;
+  const easyRatio = isHighRigorBoard ? Math.max(0.08, ratios.easy - 0.05) : ratios.easy;
+
   const byDiff: Record<Difficulty, Question[]> = {
     easy: fisherYates(pool.filter(q => q.difficulty === 'easy'), rand),
     medium: fisherYates(pool.filter(q => q.difficulty === 'medium'), rand),
     hard: fisherYates(pool.filter(q => q.difficulty === 'hard'), rand),
   };
 
-  const easyCount = Math.round(count * 0.33);
-  const hardCount = Math.round(count * 0.20);
-  const mediumCount = count - easyCount - hardCount;
+  const easyCount = Math.round(count * easyRatio);
+  const hardCount = Math.round(count * hardRatio);
+  const mediumCount = Math.max(0, count - easyCount - hardCount);
 
   const picks: Question[] = [
     ...byDiff.easy.slice(0, easyCount),
@@ -52,27 +88,29 @@ function selectWithDifficulty(pool: Question[], count: number, rand: () => numbe
     ...byDiff.hard.slice(0, hardCount),
   ];
 
-  // Fill shortfall from remaining pool
+  // Fill shortfall from remaining pool if any tier is understocked
   if (picks.length < count) {
     const usedIds = new Set(picks.map(q => q.id));
     const spare = fisherYates(pool.filter(q => !usedIds.has(q.id)), rand);
     picks.push(...spare.slice(0, count - picks.length));
   }
 
-  // Final shuffle so difficulties are interleaved
+  // Shuffle so questions are seamlessly interleaved across difficulty
   return fisherYates(picks, rand).slice(0, count).map(q => q.id);
 }
 
 /**
- * Generate a unique, reproducible session question set for each candidate.
- * Seed = hash of candidateId + startTime → same inputs always give same output.
+ * Generate a unique, reproducible session question set for each candidate
+ * calibrated to their exact academic level and educational / university board.
  */
 export function generateSessionQuestions(
   candidateId: string,
   startTime: number,
-  mode: 'full' | 'quick' = 'full'
+  mode: 'full' | 'quick' = 'full',
+  educationLevel: string = 'Class 10',
+  board: string = 'CBSE'
 ): SessionQuestionIds {
-  const seed = hashString(`${candidateId}::${startTime}`);
+  const seed = hashString(`${candidateId}::${startTime}::${educationLevel}::${board}`);
   const rand = mulberry32(seed);
 
   const verbalPool = questions.filter(q => q.domain === 'verbal' && q.type === 'mcq');
@@ -86,9 +124,9 @@ export function generateSessionQuestions(
   const persCount = mode === 'quick' ? 6 : 20;
 
   return {
-    verbal: selectWithDifficulty(verbalPool, aptCount, rand),
-    numerical: selectWithDifficulty(numericalPool, aptCount, rand),
-    spatial: selectWithDifficulty(spatialPool, aptCount, rand),
+    verbal: selectWithLevelAndBoard(verbalPool, aptCount, rand, educationLevel, board),
+    numerical: selectWithLevelAndBoard(numericalPool, aptCount, rand, educationLevel, board),
+    spatial: selectWithLevelAndBoard(spatialPool, aptCount, rand, educationLevel, board),
     personality: fisherYates(personalityPool, rand).slice(0, persCount).map(q => q.id),
   };
 }

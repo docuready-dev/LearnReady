@@ -50,9 +50,10 @@ import {
 import { toast } from 'sonner';
 import { ExamResultRecord, UserAccount, PaymentRecord } from '../types';
 import { ChapterQuestionBank } from '../data/questionBanks';
+import { INDIAN_BOARDS, getBoardsForLevel, getBoardCategoryLabel, getDefaultBoardForLevel } from '../data/boards';
 
 const LOGO_URL = `${import.meta.env.BASE_URL}logo.svg`;
-const BOARDS = ['CBSE', 'ICSE', 'STATE_MH', 'STATE_WB', 'STATE_DL', 'STATE_TN', 'STATE_KA', 'STATE_OTHER', 'IB', 'IGCSE'];
+const BOARDS = INDIAN_BOARDS.map(b => b.value);
 
 type TabKey = 'results' | 'users' | 'tiers' | 'banks' | 'academic';
 
@@ -217,6 +218,14 @@ export default function AdminPage() {
     setEditUserGrade(u.grade?.replace(/\s*\(Current\)/gi, '').trim() || 'Class 10');
     setEditUserBoard(u.board || 'CBSE');
     setEditUserSchool(u.school || '');
+  }
+
+  function handleEditGradeChange(newGrade: string) {
+    setEditUserGrade(newGrade);
+    const boards = getBoardsForLevel(newGrade);
+    if (!boards.some(b => b.value === editUserBoard)) {
+      setEditUserBoard(getDefaultBoardForLevel(newGrade));
+    }
   }
 
   function handleSaveUserEdit(e: React.FormEvent) {
@@ -638,10 +647,10 @@ export default function AdminPage() {
                 />
               </div>
               <Select value={boardFilter} onValueChange={setBoardFilter}>
-                <SelectTrigger className="w-full sm:w-44 text-xs"><SelectValue placeholder="Filter by board" /></SelectTrigger>
+                <SelectTrigger className="w-full sm:w-48 text-xs"><SelectValue placeholder="Filter by board" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Boards</SelectItem>
-                  {BOARDS.map(b => <SelectItem key={b} value={b}>{b}</SelectItem>)}
+                  <SelectItem value="all">All Boards & Affiliations</SelectItem>
+                  {INDIAN_BOARDS.map(b => <SelectItem key={b.value} value={b.value}>{b.label}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
@@ -1268,7 +1277,7 @@ export default function AdminPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1">
                     <Label className="text-xs font-semibold">Class / Grade</Label>
-                    <Select value={editUserGrade} onValueChange={setEditUserGrade}>
+                    <Select value={editUserGrade} onValueChange={handleEditGradeChange}>
                       <SelectTrigger className="text-xs"><SelectValue placeholder="Select class" /></SelectTrigger>
                       <SelectContent>
                         {classesList.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
@@ -1277,11 +1286,11 @@ export default function AdminPage() {
                   </div>
 
                   <div className="space-y-1">
-                    <Label className="text-xs font-semibold">Educational Board</Label>
+                    <Label className="text-xs font-semibold">{getBoardCategoryLabel(editUserGrade)}</Label>
                     <Select value={editUserBoard} onValueChange={setEditUserBoard}>
                       <SelectTrigger className="text-xs"><SelectValue placeholder="Select board" /></SelectTrigger>
                       <SelectContent>
-                        {BOARDS.map(b => <SelectItem key={b} value={b}>{b}</SelectItem>)}
+                        {getBoardsForLevel(editUserGrade).map(b => <SelectItem key={b.value} value={b.value}>{b.label}</SelectItem>)}
                       </SelectContent>
                     </Select>
                   </div>

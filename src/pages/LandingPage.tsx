@@ -11,8 +11,9 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Clock, BarChart3, Brain, ArrowRight, RotateCcw, GraduationCap, Zap, BookOpen, CheckCircle2, User, LogIn, UserPlus, UserCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TestMode } from '../types';
-import { INDIAN_BOARDS } from '../data/boards';
+import { getBoardsForLevel, getBoardCategoryLabel, getDefaultBoardForLevel } from '../data/boards';
 import PaymentModal from '../components/PaymentModal';
+import AIQuestionAssemblyModal from '../components/AIQuestionAssemblyModal';
 
 const LOGO_URL = `${import.meta.env.BASE_URL}logo.svg`;
 const DRAFT_FORM_KEY = 'learnready_landing_draft';
@@ -105,6 +106,7 @@ export default function LandingPage() {
   const [showResumeDialog, setShowResumeDialog] = useState(false);
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showAIAssemblyModal, setShowAIAssemblyModal] = useState(false);
   const hasExistingExam = state.startTime > 0 && !state.completed;
 
   // Real-time trial countdown timer
@@ -150,7 +152,16 @@ export default function LandingPage() {
   const isQuickEligible = QUICK_ELIGIBLE.includes(form.educationLevel);
 
   function setField(key: string, value: string) {
-    setFormState(p => ({ ...p, [key]: value }));
+    setFormState(p => {
+      const next = { ...p, [key]: value };
+      if (key === 'educationLevel') {
+        const boards = getBoardsForLevel(value);
+        if (!boards.some(b => b.value === next.board)) {
+          next.board = getDefaultBoardForLevel(value);
+        }
+      }
+      return next;
+    });
     if (errors[key]) setErrors(p => ({ ...p, [key]: '' }));
     if (key === 'educationLevel' && !QUICK_ELIGIBLE.includes(value)) {
       setTestMode('full');
@@ -187,7 +198,7 @@ export default function LandingPage() {
       setShowResumeDialog(true);
       return;
     }
-    doStart();
+    setShowAIAssemblyModal(true);
   }
 
   function scrollToAssessment() {
@@ -546,14 +557,16 @@ export default function LandingPage() {
               <div className="space-y-1.5 text-left">
                 <Label className="flex items-center gap-1.5 text-sm font-semibold text-foreground text-left">
                   <GraduationCap className="w-4 h-4 text-primary" />
-                  Educational Board <span className="text-destructive">*</span>
+                  {getBoardCategoryLabel(form.educationLevel)} <span className="text-destructive">*</span>
                 </Label>
                 <Select value={form.board} onValueChange={v => setField('board', v)}>
                   <SelectTrigger className="w-full h-11 text-sm text-left">
-                    <SelectValue placeholder="Select your educational board" />
+                    <SelectValue placeholder={`Select ${getBoardCategoryLabel(form.educationLevel).toLowerCase()}`} />
                   </SelectTrigger>
                   <SelectContent>
-                    {INDIAN_BOARDS.map(b => <SelectItem key={b.value} value={b.value}>{b.label}</SelectItem>)}
+                    {getBoardsForLevel(form.educationLevel).map(b => (
+                      <SelectItem key={b.value} value={b.value}>{b.label}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 {errors.board && <p className="text-xs text-destructive text-left">{errors.board}</p>}
@@ -667,10 +680,23 @@ export default function LandingPage() {
           </AlertDialogHeader>
           <AlertDialogFooter className="text-left">
             <AlertDialogCancel onClick={() => setPage('exam')} className="cursor-pointer">Resume existing</AlertDialogCancel>
-            <AlertDialogAction onClick={() => { resetExam(); doStart(); }} className="cursor-pointer">Start fresh</AlertDialogAction>
+            <AlertDialogAction onClick={() => { resetExam(); setShowAIAssemblyModal(true); }} className="cursor-pointer">Start fresh</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Realtime AI Question Calibration Modal */}
+      <AIQuestionAssemblyModal
+        open={showAIAssemblyModal}
+        educationLevel={form.educationLevel || 'Class 10'}
+        board={form.board || 'CBSE'}
+        testMode={isQuickEligible ? testMode : 'full'}
+        candidateName={form.name || user?.name || 'Student'}
+        onComplete={() => {
+          setShowAIAssemblyModal(false);
+          doStart();
+        }}
+      />
 
       {/* Chapterwise Question Bank ₹899 Payment Modal */}
       <PaymentModal

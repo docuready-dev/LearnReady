@@ -99,7 +99,7 @@ export default function ExamPage() {
             })}
           </div>
           <div className="flex-shrink-0 flex items-center gap-2">
-            <Timer seconds={timeRemaining} />
+            <Timer seconds={timeRemaining} testMode={state.testMode} />
             <Button
               variant="ghost"
               size="sm"

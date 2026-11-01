@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useExam } from '../context/ExamContext';
 import { getResults } from '../api/results';
 import { ExamResultRecord } from '../types';
-import { INDIAN_BOARDS } from '../data/boards';
+import { getBoardsForLevel, getBoardCategoryLabel, getDefaultBoardForLevel } from '../data/boards';
 import { StorageService } from '../services/storageService';
 import PaymentModal from '../components/PaymentModal';
 import { printQuestionBooklet } from '../utils/printQuestionBooklet';
@@ -59,6 +59,14 @@ export default function ProfilePage() {
   const [board, setBoard] = useState(user?.board || 'CBSE');
   const [school, setSchool] = useState(user?.school || '');
   const [isSaving, setIsSaving] = useState(false);
+
+  function handleGradeChange(newGrade: string) {
+    setGrade(newGrade);
+    const boards = getBoardsForLevel(newGrade);
+    if (!boards.some(b => b.value === board)) {
+      setBoard(getDefaultBoardForLevel(newGrade));
+    }
+  }
 
   // Results state
   const [myResults, setMyResults] = useState<ExamResultRecord[]>([]);
@@ -435,7 +443,7 @@ export default function ProfilePage() {
                     <Label className="text-sm font-semibold text-foreground flex items-center gap-2 text-left">
                       <GraduationCap className="w-4 h-4 text-muted-foreground" />Class / Level *
                     </Label>
-                    <Select value={grade} onValueChange={setGrade}>
+                    <Select value={grade} onValueChange={handleGradeChange}>
                       <SelectTrigger className="h-11 text-sm text-left">
                         <SelectValue placeholder="Select class" />
                       </SelectTrigger>
@@ -448,13 +456,15 @@ export default function ProfilePage() {
                   </div>
 
                   <div className="space-y-1.5 text-left">
-                    <Label className="text-sm font-semibold text-foreground text-left">Educational Board *</Label>
+                    <Label className="text-sm font-semibold text-foreground text-left">
+                      {getBoardCategoryLabel(grade)} *
+                    </Label>
                     <Select value={board} onValueChange={setBoard}>
                       <SelectTrigger className="h-11 text-sm text-left">
-                        <SelectValue placeholder="Select board" />
+                        <SelectValue placeholder={`Select ${getBoardCategoryLabel(grade).toLowerCase()}`} />
                       </SelectTrigger>
                       <SelectContent>
-                        {INDIAN_BOARDS.map(b => (
+                        {getBoardsForLevel(grade).map(b => (
                           <SelectItem key={b.value} value={b.value}>{b.label}</SelectItem>
                         ))}
                       </SelectContent>
