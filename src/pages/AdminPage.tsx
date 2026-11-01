@@ -192,7 +192,7 @@ function AdminDashboard() {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead className="border-b border-border bg-muted/40">
-                    <tr>{['Name', 'Email', 'Board', 'Score', 'Percentile', 'Profile', 'Date', ''].map(h => (
+                    <tr>{['Name', 'Email', 'Mobile', 'Board', 'Score', 'Percentile', 'Profile', 'Date', ''].map(h => (
                       <th key={h} className="text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground px-4 py-2.5 whitespace-nowrap">{h}</th>
                     ))}</tr>
                   </thead>
@@ -201,6 +201,7 @@ function AdminDashboard() {
                       <tr key={r.id} className={`border-b border-border/50 hover:bg-muted/30 transition-colors ${i % 2 ? 'bg-muted/10' : ''}`}>
                         <td className="px-4 py-3 font-medium whitespace-nowrap">{r.name || r.candidateId}</td>
                         <td className="px-4 py-3 text-muted-foreground text-xs">{r.email}</td>
+                        <td className="px-4 py-3 text-muted-foreground text-xs whitespace-nowrap">{r.phone || 'N/A'}</td>
                         <td className="px-4 py-3"><Badge variant="outline" className="text-xs">{r.board}</Badge></td>
                         <td className="px-4 py-3 font-bold text-primary">{r.totalScore}/100</td>
                         <td className="px-4 py-3 text-muted-foreground">{r.percentile}th</td>

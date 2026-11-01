@@ -89,6 +89,7 @@ export default function ResultsPage() {
       candidateId: state.candidateId,
       name: state.name || '',
       email: state.email || '',
+      phone: state.phone || '',
       age: parseInt(state.age) || 0,
       board: state.board || '',
       region: state.region || '',

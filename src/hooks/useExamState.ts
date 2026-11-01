@@ -13,7 +13,7 @@ export function getTotalSeconds(mode?: TestMode): number {
 const emptyQuestionIds: SessionQuestionIds = { verbal: [], numerical: [], spatial: [], personality: [] };
 
 const defaultState: ExamState = {
-  candidateId: '', email: '', name: '', age: '', region: '',
+  candidateId: '', email: '', phone: '', name: '', age: '', region: '',
   educationLevel: '', board: '', testMode: 'full',
   startTime: 0, currentSection: 0, currentQuestion: 0,
   answers: {}, submittedSections: [false, false, false, false],
@@ -68,7 +68,8 @@ export function useExamState() {
 
   const startExam = useCallback((
     candidateId: string, email: string, name: string, age: string,
-    region: string, educationLevel: string, board: string, testMode: TestMode = 'full'
+    region: string, educationLevel: string, board: string, testMode: TestMode = 'full',
+    phone: string = ''
   ) => {
     const startTime = Date.now();
     const questionIds = generateSessionQuestions(candidateId, startTime, testMode);
@@ -76,6 +77,7 @@ export function useExamState() {
       ...defaultState,
       candidateId,
       email,
+      phone,
       name,
       age,
       region,

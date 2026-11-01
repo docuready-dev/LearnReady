@@ -44,7 +44,7 @@ const MODES: { id: TestMode; icon: any; title: string; time: string; questions: 
     title: 'Quick Test',
     time: '30 minutes',
     questions: '30 questions',
-    desc: 'Shorter session — same 4 sections, fewer questions',
+    desc: 'Shorter session with same 4 sections and fewer questions',
     badge: 'Express',
     badgeCls: 'bg-amber-50 text-amber-700 border-amber-300',
   },
@@ -66,6 +66,7 @@ export default function LandingPage() {
           board: p.board || state.board || user?.board || '',
           candidateId: p.candidateId || state.candidateId || '',
           email: p.email || state.email || user?.email || '',
+          phone: p.phone || state.phone || user?.phone || '',
         };
       }
     } catch {}
@@ -77,6 +78,7 @@ export default function LandingPage() {
       board: state.board || user?.board || '',
       candidateId: state.candidateId || '',
       email: state.email || user?.email || '',
+      phone: state.phone || user?.phone || '',
     };
   });
 
@@ -92,6 +94,7 @@ export default function LandingPage() {
         ...p,
         name: p.name || user.name || '',
         email: p.email || user.email || '',
+        phone: p.phone || user.phone || '',
         educationLevel: p.educationLevel || user.grade || '',
         board: p.board || user.board || '',
       }));
@@ -117,19 +120,20 @@ export default function LandingPage() {
   function validate() {
     const e: Record<string, string> = {};
     if (!form.name.trim()) e.name = 'Full name is required';
-    if (!form.age || isNaN(+form.age) || +form.age < 12 || +form.age > 25) e.age = 'Valid age (12–25) required';
+    if (!form.age || isNaN(+form.age) || +form.age < 12 || +form.age > 25) e.age = 'Valid age (12 to 25) required';
     if (!form.region) e.region = 'Select your region';
     if (!form.educationLevel) e.educationLevel = 'Select your class/level';
     if (!form.board) e.board = 'Select your educational board';
     if (!form.candidateId.trim()) e.candidateId = 'Roll number / Candidate ID required';
     if (!form.email.trim() || !form.email.includes('@')) e.email = 'Valid email required';
+    if (!form.phone.trim() || form.phone.replace(/\D/g, '').length < 10) e.phone = 'Valid 10-digit mobile number required';
     setErrors(e);
     return Object.keys(e).length === 0;
   }
 
   function doStart() {
     const effectiveMode = isQuickEligible ? testMode : 'full';
-    startExam(form.candidateId.trim(), form.email.trim(), form.name.trim(), form.age, form.region, form.educationLevel, form.board, effectiveMode);
+    startExam(form.candidateId.trim(), form.email.trim(), form.name.trim(), form.age, form.region, form.educationLevel, form.board, effectiveMode, form.phone.trim());
     setPage('exam');
   }
 
@@ -165,7 +169,7 @@ export default function LandingPage() {
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5 hidden sm:flex items-center gap-1.5">
-              <GraduationCap className="w-3.5 h-3.5" />Indian Boards — 2024–25
+              <GraduationCap className="w-3.5 h-3.5" />Indian Boards 2026-27
             </Badge>
             {user ? (
               <div className="flex items-center gap-2">
@@ -193,31 +197,31 @@ export default function LandingPage() {
 
       <main className="flex-1 flex items-center justify-center p-6">
         <div className="w-full max-w-2xl space-y-7">
-          <div className="text-center space-y-3">
+          <div className="text-left space-y-3">
             <img
               src={LOGO_URL}
               alt="LearnReady"
-              className="mx-auto object-contain cursor-pointer select-none transition-transform active:scale-95"
+              className="object-contain cursor-pointer select-none transition-transform active:scale-95"
               style={{ height: '76px', width: 'auto' }}
               onClick={handleLogoClick}
               title="LearnReady"
             />
-            <h2 className="text-3xl font-bold text-foreground tracking-tight">Aptitude & Interest Battery</h2>
-            <p className="text-muted-foreground max-w-lg mx-auto">
-              A nationally benchmarked diagnostic assessment for Class 9–12 students. Each session is uniquely randomised — no two tests are identical.
+            <h2 className="text-3xl font-bold text-foreground tracking-tight text-left">Aptitude & Interest Battery</h2>
+            <p className="text-muted-foreground text-left sm:text-justify leading-relaxed">
+              A nationally benchmarked diagnostic assessment for Class 9 to 12 students. Each session is uniquely randomised. No two tests are identical.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {SECTIONS_INFO.map(s => (
               <div key={s.label} className={`rounded-lg border p-3 ${s.cls}`}>
-                <p className="font-semibold text-sm">{s.label}</p>
-                <p className="text-xs opacity-80 mt-0.5">{s.desc}</p>
+                <p className="font-semibold text-sm text-left">{s.label}</p>
+                <p className="text-xs opacity-80 mt-0.5 text-left text-justify">{s.desc}</p>
               </div>
             ))}
           </div>
 
-          <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
+          <div className="flex items-center justify-start gap-6 text-sm text-muted-foreground flex-wrap">
             <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-primary" />{displayTime}</span>
             <span className="flex items-center gap-1.5"><BarChart3 className="w-4 h-4 text-primary" />{displayQuestions}</span>
             <span className="flex items-center gap-1.5"><Brain className="w-4 h-4 text-primary" />Unique randomisation</span>
@@ -257,7 +261,7 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* ── Test Format Selector — visible only for Class 9 & 10 ── */}
+              {/* Test Format Selector: visible only for Class 9 & 10 */}
               {isQuickEligible && (
                 <div className="space-y-2">
                   <Label className="flex items-center gap-1.5">
@@ -321,17 +325,23 @@ export default function LandingPage() {
                 {errors.board && <p className="text-xs text-destructive">{errors.board}</p>}
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <Label htmlFor="candidateId">Roll No. / Candidate ID</Label>
                   <Input id="candidateId" placeholder="e.g. 23CBSE001" value={form.candidateId} onChange={e => setField('candidateId', e.target.value)} />
                   {errors.candidateId && <p className="text-xs text-destructive">{errors.candidateId}</p>}
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="email">Email Address</Label>
-                  <Input id="email" type="email" placeholder="you@example.com" value={form.email} onChange={e => setField('email', e.target.value)} />
-                  {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
+                  <Label htmlFor="phone">Mobile Number</Label>
+                  <Input id="phone" type="tel" placeholder="e.g. 9876543210" value={form.phone} onChange={e => setField('phone', e.target.value)} />
+                  {errors.phone && <p className="text-xs text-destructive">{errors.phone}</p>}
                 </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="email">Email Address</Label>
+                <Input id="email" type="email" placeholder="you@example.com" value={form.email} onChange={e => setField('email', e.target.value)} />
+                {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
               </div>
 
               {hasExistingExam ? (
@@ -354,7 +364,7 @@ export default function LandingPage() {
               )}
             </CardContent>
           </Card>
-          <p className="text-center text-xs text-muted-foreground">
+          <p className="text-left text-xs text-muted-foreground text-justify">
             Each session generates a unique question set from our 140+ question bank. Progress saved automatically.
           </p>
         </div>

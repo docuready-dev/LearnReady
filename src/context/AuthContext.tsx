@@ -5,6 +5,7 @@ export const ADMIN_EMAIL = 'ashleyghose64@gmail.com';
 
 export interface User {
   email: string;
+  phone?: string;
   name?: string;
   role?: 'admin' | 'candidate';
   grade?: string;
@@ -24,7 +25,7 @@ interface AuthContextValue {
   sendAdminMagicLink: (email: string) => { success: boolean; message: string; magicUrl?: string; token?: string };
   verifyMagicToken: (token: string, email: string) => boolean;
   login: (email: string, name?: string) => void;
-  register: (data: { name: string; email: string; grade?: string; board?: string; school?: string }) => void;
+  register: (data: { name: string; email: string; phone?: string; grade?: string; board?: string; school?: string }) => void;
   loginWithRedirect: (customEmail?: string) => void;
   loginAsAdmin: () => void;
   logout: () => void;
@@ -75,11 +76,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(sessionUser);
   };
 
-  const register = (data: { name: string; email: string; grade?: string; board?: string; school?: string }) => {
+  const register = (data: { name: string; email: string; phone?: string; grade?: string; board?: string; school?: string }) => {
     const isTargetAdmin = data.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
     StorageService.saveUserAccount({
       name: data.name,
       email: data.email,
+      phone: data.phone,
       role: isTargetAdmin ? 'admin' : 'candidate',
       grade: data.grade,
       board: data.board,
@@ -89,6 +91,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const sessionUser: User = {
       email: data.email,
       name: data.name,
+      phone: data.phone,
       role: isTargetAdmin ? 'admin' : 'candidate',
       grade: data.grade,
       board: data.board,

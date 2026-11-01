@@ -9,6 +9,7 @@ export async function saveResult(input: {
   candidateId: string;
   name: string;
   email: string;
+  phone?: string;
   age: number;
   board: string;
   region: string;

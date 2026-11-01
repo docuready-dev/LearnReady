@@ -110,6 +110,11 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
+    text-align: left;
+  }
+  p {
+    text-align: justify;
+    text-justify: inter-word;
   }
 }
 

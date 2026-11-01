@@ -58,12 +58,13 @@ export class StorageService {
 
   public static exportToCSV(results: ExamResultRecord[]): void {
     if (!results.length) return;
-    const headers = ['ID', 'Candidate ID', 'Name', 'Email', 'Age', 'Board', 'Region', 'Class', 'Total Score', 'Verbal Score', 'Numerical Score', 'Spatial Score', 'Profile', 'Percentile', 'National Rank', 'Date Taken'];
+    const headers = ['ID', 'Candidate ID', 'Name', 'Email', 'Mobile', 'Age', 'Board', 'Region', 'Class', 'Total Score', 'Verbal Score', 'Numerical Score', 'Spatial Score', 'Profile', 'Percentile', 'National Rank', 'Date Taken'];
     const rows = results.map(r => [
       r.id,
       r.candidateId,
       `"${r.name.replace(/"/g, '""')}"`,
       r.email,
+      r.phone || 'N/A',
       r.age,
       r.board,
       r.region,

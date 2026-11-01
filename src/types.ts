@@ -34,6 +34,7 @@ export type TestMode = 'full' | 'quick';
 export interface ExamState {
   candidateId: string;
   email: string;
+  phone?: string;
   name: string;
   age: string;
   region: string;
@@ -70,6 +71,7 @@ export interface ExamResultRecord {
   candidateId: string;
   name: string;
   email: string;
+  phone?: string;
   age: number;
   board: string;
   region: string;
@@ -88,6 +90,7 @@ export interface UserAccount {
   id: string;
   name: string;
   email: string;
+  phone?: string;
   role: 'candidate' | 'admin';
   grade?: string;
   board?: string;

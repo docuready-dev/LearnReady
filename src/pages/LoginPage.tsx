@@ -12,7 +12,6 @@ import {
   Lock,
   Mail,
   User,
-  Shield,
   Eye,
   EyeOff,
   CheckCircle2,
@@ -20,7 +19,9 @@ import {
   Home,
   Brain,
   BarChart3,
-  BookOpen
+  BookOpen,
+  Phone,
+  GraduationCap
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -35,7 +36,7 @@ const EDUCATION_LEVELS = [
 ];
 
 export default function LoginPage() {
-  const { user, login, register, loginAsAdmin, authTab, setAuthTab, handleLogoClick } = useAuth();
+  const { user, login, register, authTab, setAuthTab, handleLogoClick } = useAuth();
   const { setPage } = useExam();
 
   const [mode, setMode] = useState<'login' | 'register'>(authTab || 'login');
@@ -54,6 +55,7 @@ export default function LoginPage() {
   // Register form
   const [regName, setRegName] = useState('');
   const [regEmail, setRegEmail] = useState('');
+  const [regPhone, setRegPhone] = useState('');
   const [regPassword, setRegPassword] = useState('');
   const [regGrade, setRegGrade] = useState('Class 10 (Current)');
   const [regBoard, setRegBoard] = useState('CBSE');
@@ -113,6 +115,7 @@ export default function LoginPage() {
       register({
         name: regName.trim(),
         email: regEmail.trim(),
+        phone: regPhone.trim() || undefined,
         grade: regGrade,
         board: regBoard,
         school: regSchool.trim() || undefined,
@@ -149,7 +152,7 @@ export default function LoginPage() {
               </Button>
               {user.role === 'admin' && (
                 <Button variant="outline" className="w-full cursor-pointer" onClick={() => setPage('admin')}>
-                  <Shield className="w-4 h-4 mr-2" />Open Admin Dashboard
+                  <Lock className="w-4 h-4 mr-2" />Open Admin Dashboard
                 </Button>
               )}
             </div>
@@ -186,27 +189,27 @@ export default function LoginPage() {
       <main className="flex-1 flex items-center justify-center p-4 sm:p-6">
         <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left Column: Value Prop */}
-          <div className="lg:col-span-5 space-y-6 hidden lg:block">
-            <div className="space-y-2">
+          <div className="lg:col-span-5 space-y-6 hidden lg:block text-left">
+            <div className="space-y-2 text-left">
               <Badge className="bg-primary/10 text-primary border-primary/30 text-xs px-2.5 py-0.5">
-                Indian Boards — 2024–25
+                Indian Boards 2026-27
               </Badge>
-              <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
+              <h1 className="text-3xl font-extrabold tracking-tight text-foreground text-left">
                 National Cognitive & Stream Diagnostic
               </h1>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground text-left sm:text-justify leading-relaxed">
                 Log in to securely track your diagnostic outcomes, compare against national benchmarks, and unlock your academic stream recommendation report.
               </p>
             </div>
 
-            <div className="space-y-3.5">
+            <div className="space-y-3.5 text-left">
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <Brain className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-foreground">Psychometrically Standardized</p>
-                  <p className="text-2xs text-muted-foreground">Verbal, Numerical & Spatial battery with Holland RIASEC interest index.</p>
+                  <p className="text-xs font-bold text-foreground text-left">Psychometrically Standardized</p>
+                  <p className="text-2xs text-muted-foreground text-left sm:text-justify">Verbal, Numerical & Spatial battery with Holland RIASEC interest index.</p>
                 </div>
               </div>
 
@@ -215,8 +218,8 @@ export default function LoginPage() {
                   <BarChart3 className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-foreground">Gaussian National Norms</p>
-                  <p className="text-2xs text-muted-foreground">Real-time percentile ranking across CBSE, ICSE, and State Board cohorts.</p>
+                  <p className="text-xs font-bold text-foreground text-left">Gaussian National Norms</p>
+                  <p className="text-2xs text-muted-foreground text-left sm:text-justify">Real-time percentile ranking across CBSE, ICSE, and State Board cohorts.</p>
                 </div>
               </div>
 
@@ -225,31 +228,19 @@ export default function LoginPage() {
                   <BookOpen className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-foreground">Stream Fit Recommendations</p>
-                  <p className="text-2xs text-muted-foreground">Deterministic alignment into Science PCM/PCB, Commerce, and Humanities.</p>
+                  <p className="text-xs font-bold text-foreground text-left">Stream Fit Recommendations</p>
+                  <p className="text-2xs text-muted-foreground text-left sm:text-justify">Deterministic alignment into Science PCM/PCB, Commerce, and Humanities.</p>
                 </div>
               </div>
             </div>
 
-            <div className="rounded-xl border border-border bg-card p-4 space-y-2 text-xs text-muted-foreground">
+            <div className="rounded-xl border border-border bg-card p-4 space-y-2 text-xs text-muted-foreground text-left">
               <p className="font-semibold text-foreground flex items-center gap-1.5">
-                <Shield className="w-3.5 h-3.5 text-primary" />Super Admin Fast Access
+                <GraduationCap className="w-3.5 h-3.5 text-primary" />Candidate Portal
               </p>
-              <p className="text-2xs leading-relaxed">
-                Evaluating the system? Click below to authenticate directly as Super Admin with complete management privileges.
+              <p className="text-2xs text-justify leading-relaxed">
+                Your diagnostic results and academic orientation reports are permanently tied to your student account. Sign in or register to preserve session continuity.
               </p>
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full text-xs font-semibold cursor-pointer border-primary/30 text-primary hover:bg-primary/10"
-                onClick={() => {
-                  loginAsAdmin();
-                  toast.success('Authenticated as Super Admin');
-                  setPage('admin');
-                }}
-              >
-                Instant Super Admin Login →
-              </Button>
             </div>
           </div>
 
@@ -398,17 +389,29 @@ export default function LoginPage() {
 
                       <div className="space-y-1.5">
                         <Label className="text-xs font-semibold flex items-center gap-1.5">
-                          <Lock className="w-3.5 h-3.5 text-muted-foreground" />Password *
+                          <Phone className="w-3.5 h-3.5 text-muted-foreground" />Mobile Number
                         </Label>
                         <Input
-                          type="password"
-                          placeholder="Min 6 characters"
-                          value={regPassword}
-                          onChange={e => setRegPassword(e.target.value)}
-                          className={errors.regPassword ? 'border-destructive' : ''}
+                          type="tel"
+                          placeholder="e.g. 9876543210"
+                          value={regPhone}
+                          onChange={e => setRegPhone(e.target.value)}
                         />
-                        {errors.regPassword && <p className="text-xs text-destructive">{errors.regPassword}</p>}
                       </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-semibold flex items-center gap-1.5">
+                        <Lock className="w-3.5 h-3.5 text-muted-foreground" />Password *
+                      </Label>
+                      <Input
+                        type="password"
+                        placeholder="Min 6 characters"
+                        value={regPassword}
+                        onChange={e => setRegPassword(e.target.value)}
+                        className={errors.regPassword ? 'border-destructive' : ''}
+                      />
+                      {errors.regPassword && <p className="text-xs text-destructive">{errors.regPassword}</p>}
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

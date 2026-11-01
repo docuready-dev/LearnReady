@@ -240,9 +240,10 @@ export default function PrintReport({
   ];
 
   const candidateDetails = [
-    ['Candidate Name',     state.name || '—'],
+    ['Candidate Name',     state.name || 'N/A'],
     ['Candidate ID',       state.candidateId],
     ['Email Address',      state.email],
+    ['Mobile Number',      state.phone || 'N/A'],
     ['Age',                state.age],
     ['Educational Board',  getBoardLabel(state.board)],
     ['Class / Level',      state.educationLevel],
@@ -288,13 +289,13 @@ export default function PrintReport({
         <div style={{ textAlign: 'center', paddingBottom: '12px', borderBottom: '2px solid #e5e7eb' }}>
           <img src={LOGO_URL} alt="LearnReady" style={{ width: '120px', height: 'auto', margin: '0 auto 8px', display: 'block' }} />
           <p style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#9ca3af', margin: '0 0 4px' }}>
-            Confidential — Candidate Assessment Report
+            Confidential · Candidate Assessment Report
           </p>
           <h1 style={{ fontSize: '21px', fontWeight: 900, color: '#111827', margin: '0 0 3px', letterSpacing: '-0.02em' }}>
             Aptitude & Interest Battery
           </h1>
           <p style={{ fontSize: '11px', color: '#6b7280', margin: 0 }}>
-            National Diagnostic Assessment · Class 9–12 India · 2024–25
+            National Diagnostic Assessment · Class 9 to 12 India · 2026-27
           </p>
         </div>
 
