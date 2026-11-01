@@ -112,7 +112,7 @@ export default function ResultsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-background print:bg-white">
+    <div className="min-h-screen bg-background print:bg-white font-delight text-left">
       <PrintReport
         state={state} verbal={verbal} numerical={numerical} spatial={spatial}
         personality={personality} userTotal={userTotal}
@@ -121,9 +121,9 @@ export default function ResultsPage() {
       />
 
       {/* Screen header */}
-      <header className="border-b border-border bg-card sticky top-0 z-10 shadow-sm no-print">
-        <div className="max-w-5xl mx-auto px-4 py-2 flex items-center justify-between">
-          <div className="flex items-center">
+      <header className="border-b border-border bg-card sticky top-0 z-10 shadow-sm no-print text-left">
+        <div className="max-w-5xl mx-auto px-4 py-2 flex items-center justify-between text-left">
+          <div className="flex items-center text-left">
             <img
               src={LOGO_URL}
               alt="LearnReady"
@@ -147,7 +147,7 @@ export default function ResultsPage() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 py-8 space-y-6 no-print">
+      <main className="max-w-5xl mx-auto px-6 py-8 space-y-6 no-print text-left">
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
           <div>
             <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold mb-1">Candidate Profile Report</p>

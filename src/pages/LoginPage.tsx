@@ -200,32 +200,32 @@ export default function LoginPage() {
   // Already logged in state
   if (user) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
-        <Card className="w-full max-w-md shadow-lg border-primary/20 text-center">
-          <CardHeader className="pb-3">
-            <div className="w-14 h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-2">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 font-delight text-left">
+        <Card className="w-full max-w-md shadow-lg border-primary/20 text-left">
+          <CardHeader className="pb-3 text-left">
+            <div className="w-14 h-14 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-2">
               <CheckCircle2 className="w-8 h-8" />
             </div>
-            <CardTitle className="text-xl font-bold">You are already signed in</CardTitle>
-            <CardDescription className="text-sm">
+            <CardTitle className="text-2xl font-bold text-left">You are already signed in</CardTitle>
+            <CardDescription className="text-sm sm:text-base text-left">
               Signed in as <strong className="text-foreground">{user.name || user.email}</strong> ({user.email})
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="rounded-lg bg-muted p-3 text-xs text-muted-foreground flex items-center justify-between">
-              <span>Account Type:</span>
-              <Badge variant="outline" className="capitalize">{user.role || 'candidate'}</Badge>
+          <CardContent className="space-y-4 text-left">
+            <div className="rounded-xl bg-muted p-3.5 text-sm text-muted-foreground flex items-center justify-between text-left">
+              <span className="font-medium">Account Type:</span>
+              <Badge variant="outline" className="capitalize text-xs font-semibold">{user.role || 'candidate'}</Badge>
             </div>
 
-            <div className="flex flex-col gap-2 pt-2">
-              <Button className="w-full cursor-pointer" onClick={() => setPage('landing')}>
+            <div className="flex flex-col gap-2.5 pt-2 text-left">
+              <Button className="w-full cursor-pointer h-11 text-sm font-semibold" onClick={() => setPage('landing')}>
                 <Home className="w-4 h-4 mr-2" />Go to Home / Assessment
               </Button>
-              <Button variant="outline" className="w-full cursor-pointer border-primary/30 text-primary hover:bg-primary/5" onClick={() => setPage('profile')}>
+              <Button variant="outline" className="w-full cursor-pointer border-primary/30 text-primary hover:bg-primary/5 h-11 text-sm font-semibold" onClick={() => setPage('profile')}>
                 <User className="w-4 h-4 mr-2" />Go to My Profile & Results
               </Button>
               {user.role === 'admin' && (
-                <Button variant="outline" className="w-full cursor-pointer" onClick={() => setPage('admin')}>
+                <Button variant="outline" className="w-full cursor-pointer h-11 text-sm font-semibold" onClick={() => setPage('admin')}>
                   <Lock className="w-4 h-4 mr-2" />Open Admin Dashboard
                 </Button>
               )}
@@ -237,101 +237,101 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col font-delight text-left">
       {/* Header */}
-      <header className="border-b border-border bg-card px-4 py-2 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
+      <header className="border-b border-border bg-card px-4 py-3 sticky top-0 z-10 shadow-2xs text-left">
+        <div className="max-w-6xl mx-auto flex items-center justify-between text-left">
+          <div className="flex items-center gap-3 text-left">
             <img
               src={LOGO_URL}
               alt="LearnReady"
-              style={{ height: '50px', width: 'auto' }}
+              style={{ height: '48px', width: 'auto' }}
               className="object-contain cursor-pointer select-none transition-transform active:scale-95"
               onClick={handleLogoClick}
               title="LearnReady"
             />
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={() => setPage('landing')} className="cursor-pointer text-xs">
-              <Home className="w-3.5 h-3.5 mr-1" />Home
+          <div className="flex items-center gap-2 text-left">
+            <Button variant="ghost" size="sm" onClick={() => setPage('landing')} className="cursor-pointer text-sm font-semibold h-10 px-3">
+              <Home className="w-4 h-4 mr-1.5" />Home
             </Button>
           </div>
         </div>
       </header>
 
       {/* Main Container */}
-      <main className="flex-1 flex items-center justify-center p-4 sm:p-6">
-        <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-8 text-left">
+        <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-10 items-center text-left">
           {/* Left Column: Value Prop */}
           <div className="lg:col-span-5 space-y-6 hidden lg:block text-left">
-            <div className="space-y-2 text-left">
-              <Badge className="bg-primary/10 text-primary border-primary/30 text-xs px-2.5 py-0.5">
+            <div className="space-y-3 text-left">
+              <Badge className="bg-primary/10 text-primary border-primary/30 text-xs px-3 py-1 font-semibold text-left">
                 Indian Boards 2026-27
               </Badge>
-              <h1 className="text-3xl font-extrabold tracking-tight text-foreground text-left">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground text-left leading-tight">
                 National Cognitive & Stream Diagnostic
               </h1>
-              <p className="text-sm text-muted-foreground text-left sm:text-justify leading-relaxed">
+              <p className="text-sm sm:text-base text-muted-foreground text-left leading-relaxed">
                 Log in to securely track your diagnostic outcomes, compare against national benchmarks, and unlock your academic stream recommendation report.
               </p>
             </div>
 
-            <div className="space-y-3.5 text-left">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Brain className="w-4 h-4" />
+            <div className="space-y-4 text-left">
+              <div className="flex items-start gap-3.5 text-left">
+                <div className="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <Brain className="w-5 h-5" />
                 </div>
-                <div>
-                  <p className="text-xs font-bold text-foreground text-left">Psychometrically Standardized</p>
-                  <p className="text-2xs text-muted-foreground text-left sm:text-justify">Verbal, Numerical & Spatial battery with Holland RIASEC interest index.</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <BarChart3 className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-foreground text-left">Gaussian National Norms</p>
-                  <p className="text-2xs text-muted-foreground text-left sm:text-justify">Real-time percentile ranking across CBSE, ICSE, and State Board cohorts.</p>
+                <div className="text-left">
+                  <p className="text-sm font-bold text-foreground text-left">Psychometrically Standardized</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground text-left leading-relaxed">Verbal, Numerical and Spatial battery with Holland RIASEC interest index.</p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-violet-100 text-violet-700 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <BookOpen className="w-4 h-4" />
+              <div className="flex items-start gap-3.5 text-left">
+                <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <BarChart3 className="w-5 h-5" />
                 </div>
-                <div>
-                  <p className="text-xs font-bold text-foreground text-left">Stream Fit Recommendations</p>
-                  <p className="text-2xs text-muted-foreground text-left sm:text-justify">Deterministic alignment into Science PCM/PCB, Commerce, and Humanities.</p>
+                <div className="text-left">
+                  <p className="text-sm font-bold text-foreground text-left">Gaussian National Norms</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground text-left leading-relaxed">Real-time percentile ranking across CBSE, ICSE, and State Board cohorts.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3.5 text-left">
+                <div className="w-9 h-9 rounded-xl bg-violet-100 text-violet-700 dark:bg-violet-950/60 dark:text-violet-300 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <BookOpen className="w-5 h-5" />
+                </div>
+                <div className="text-left">
+                  <p className="text-sm font-bold text-foreground text-left">Stream Fit Recommendations</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground text-left leading-relaxed">Deterministic alignment into Science PCM/PCB, Commerce, and Humanities.</p>
                 </div>
               </div>
             </div>
 
-            <div className="rounded-xl border border-border bg-card p-4 space-y-2 text-xs text-muted-foreground text-left">
-              <p className="font-semibold text-foreground flex items-center gap-1.5">
-                <GraduationCap className="w-3.5 h-3.5 text-primary" />Candidate Portal
+            <div className="rounded-xl border border-border bg-card p-4 space-y-2 text-left">
+              <p className="font-bold text-foreground flex items-center gap-2 text-sm text-left">
+                <GraduationCap className="w-4 h-4 text-primary" />Candidate Portal
               </p>
-              <p className="text-2xs text-justify leading-relaxed">
+              <p className="text-xs sm:text-sm text-muted-foreground text-left leading-relaxed">
                 Your diagnostic results and academic orientation reports are permanently tied to your student account. Sign in or register to preserve session continuity.
               </p>
             </div>
           </div>
 
           {/* Right Column: Auth Card */}
-          <div className="lg:col-span-7">
-            <Card className="shadow-lg border-border">
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-between mb-1">
-                  <img src={LOGO_URL} alt="LearnReady" className="h-8 object-contain" />
-                  <Badge variant="outline" className="text-2xs font-semibold">
+          <div className="lg:col-span-7 text-left">
+            <Card className="shadow-lg border-border text-left">
+              <CardHeader className="pb-4 text-left">
+                <div className="flex items-center justify-between mb-2 text-left">
+                  <img src={LOGO_URL} alt="LearnReady" style={{ height: '36px', width: 'auto' }} className="object-contain" />
+                  <Badge variant="outline" className="text-xs font-semibold px-2.5 py-1">
                     {mode === 'login' ? 'Existing Candidate' : mode === 'register' ? 'New Registration' : 'Password Recovery'}
                   </Badge>
                 </div>
-                <CardTitle className="text-2xl font-bold">
+                <CardTitle className="text-2xl font-bold text-left">
                   {mode === 'login' ? 'Sign in to your account' : mode === 'register' ? 'Create candidate account' : 'Reset your password'}
                 </CardTitle>
-                <CardDescription className="text-xs text-muted-foreground">
+                <CardDescription className="text-sm text-muted-foreground text-left leading-relaxed">
                   {mode === 'login'
                     ? 'Enter your credentials to access your assessment session and reports'
                     : mode === 'register'
@@ -341,11 +341,11 @@ export default function LoginPage() {
 
                 {/* Tab Switcher */}
                 {mode !== 'forgot' ? (
-                  <div className="grid grid-cols-2 gap-1 bg-muted p-1 rounded-lg mt-3">
+                  <div className="grid grid-cols-2 gap-1.5 bg-muted p-1.5 rounded-xl mt-4 text-left">
                     <button
                       type="button"
                       onClick={() => { setMode('login'); setAuthTab('login'); setErrors({}); }}
-                      className={`py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer ${
+                      className={`py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer text-center ${
                         mode === 'login' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
                       }`}
                     >
@@ -354,7 +354,7 @@ export default function LoginPage() {
                     <button
                       type="button"
                       onClick={() => { setMode('register'); setAuthTab('register'); setErrors({}); }}
-                      className={`py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer ${
+                      className={`py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer text-center ${
                         mode === 'register' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
                       }`}
                     >
@@ -362,44 +362,44 @@ export default function LoginPage() {
                     </button>
                   </div>
                 ) : (
-                  <div className="pt-2">
+                  <div className="pt-3 text-left">
                     <button
                       type="button"
                       onClick={() => { setMode('login'); setErrors({}); }}
-                      className="text-xs text-primary hover:underline flex items-center gap-1.5 cursor-pointer font-medium"
+                      className="text-sm text-primary hover:underline flex items-center gap-1.5 cursor-pointer font-semibold text-left"
                     >
-                      <ArrowLeft className="w-3.5 h-3.5" />Back to Candidate Sign In
+                      <ArrowLeft className="w-4 h-4" />Back to Candidate Sign In
                     </button>
                   </div>
                 )}
               </CardHeader>
 
-              <CardContent>
+              <CardContent className="text-left">
                 {mode === 'login' ? (
                   /* SIGN IN FORM */
-                  <form onSubmit={handleLogin} className="space-y-4">
-                    <div className="space-y-1.5">
-                      <Label className="text-xs font-semibold flex items-center gap-1.5">
-                        <Mail className="w-3.5 h-3.5 text-muted-foreground" />Email Address
+                  <form onSubmit={handleLogin} className="space-y-4 text-left">
+                    <div className="space-y-1.5 text-left">
+                      <Label className="text-sm font-semibold text-foreground flex items-center gap-2 text-left">
+                        <Mail className="w-4 h-4 text-muted-foreground" />Email Address
                       </Label>
                       <Input
                         type="email"
                         placeholder="e.g. rahul.sharma@example.com"
                         value={loginEmail}
                         onChange={e => setLoginEmail(e.target.value)}
-                        className={errors.loginEmail ? 'border-destructive' : ''}
+                        className={`h-11 text-sm text-left ${errors.loginEmail ? 'border-destructive' : ''}`}
                       />
-                      {errors.loginEmail && <p className="text-xs text-destructive">{errors.loginEmail}</p>}
+                      {errors.loginEmail && <p className="text-xs text-destructive text-left">{errors.loginEmail}</p>}
                     </div>
 
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <Label className="text-xs font-semibold flex items-center gap-1.5">
-                          <Lock className="w-3.5 h-3.5 text-muted-foreground" />Password
+                    <div className="space-y-1.5 text-left">
+                      <div className="flex items-center justify-between text-left">
+                        <Label className="text-sm font-semibold text-foreground flex items-center gap-2 text-left">
+                          <Lock className="w-4 h-4 text-muted-foreground" />Password
                         </Label>
                         <button
                           type="button"
-                          className="text-2xs text-primary hover:underline cursor-pointer font-medium"
+                          className="text-xs text-primary hover:underline cursor-pointer font-semibold"
                           onClick={() => {
                             setMode('forgot');
                             setForgotSent(false);
@@ -410,136 +410,136 @@ export default function LoginPage() {
                           Forgot password?
                         </button>
                       </div>
-                      <div className="relative">
+                      <div className="relative text-left">
                         <Input
                           type={showPassword ? 'text' : 'password'}
                           placeholder="••••••••"
                           value={loginPassword}
                           onChange={e => setLoginPassword(e.target.value)}
-                          className={errors.loginPassword ? 'border-destructive pr-10' : 'pr-10'}
+                          className={`h-11 text-sm text-left ${errors.loginPassword ? 'border-destructive pr-10' : 'pr-10'}`}
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(p => !p)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
+                          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
                         >
                           {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                         </button>
                       </div>
-                      {errors.loginPassword && <p className="text-xs text-destructive">{errors.loginPassword}</p>}
+                      {errors.loginPassword && <p className="text-xs text-destructive text-left">{errors.loginPassword}</p>}
                     </div>
 
-                    <Button type="submit" disabled={isSubmitting} className="w-full font-semibold cursor-pointer">
+                    <Button type="submit" disabled={isSubmitting} className="w-full font-bold h-11 text-sm cursor-pointer">
                       {isSubmitting ? 'Authenticating...' : 'Sign In'}
                     </Button>
 
-                    <div className="relative my-4">
+                    <div className="relative my-4 text-left">
                       <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
-                      <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground text-2xs">or quick demo</span></div>
+                      <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-3 text-muted-foreground text-xs font-semibold">or quick demo</span></div>
                     </div>
 
-                    <div className="pt-1">
+                    <div className="pt-1 text-left">
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
-                        className="w-full text-xs cursor-pointer"
+                        className="w-full text-xs sm:text-sm font-semibold h-10 cursor-pointer"
                         onClick={() => {
                           setLoginEmail('student.demo@learnready.in');
                           setLoginPassword('student123');
                         }}
                       >
-                        <User className="w-3.5 h-3.5 mr-1.5" />Fill Student Demo Credentials
+                        <User className="w-4 h-4 mr-2" />Fill Student Demo Credentials
                       </Button>
                     </div>
                   </form>
                 ) : mode === 'register' ? (
                   /* REGISTER FORM */
-                  <form onSubmit={handleRegister} className="space-y-3.5">
+                  <form onSubmit={handleRegister} className="space-y-4 text-left">
                     {/* 7-Day Free Trial Notice */}
-                    <div className="rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-50/70 dark:bg-blue-950/30 p-3 text-left space-y-1">
-                      <div className="flex items-center gap-1.5 text-blue-700 dark:text-blue-300 font-semibold text-xs">
-                        <Clock className="w-3.5 h-3.5" />
+                    <div className="rounded-xl border border-blue-200 dark:border-blue-900 bg-blue-50/70 dark:bg-blue-950/30 p-3.5 text-left space-y-1.5">
+                      <div className="flex items-center gap-2 text-blue-800 dark:text-blue-300 font-bold text-xs sm:text-sm text-left">
+                        <Clock className="w-4 h-4" />
                         <span>Includes 7-Day Free Candidate Trial</span>
-                        <Badge variant="outline" className="text-2xs bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-200 border-0 ml-auto">
+                        <Badge variant="outline" className="text-xs font-semibold bg-blue-100 text-blue-900 dark:bg-blue-900/60 dark:text-blue-200 border-0 ml-auto">
                           Trial Active
                         </Badge>
                       </div>
-                      <p className="text-2xs text-muted-foreground leading-relaxed text-justify">
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed text-left">
                         All registrations start with an unrestricted 7-day trial period. After the 7-day trial, candidates can unlock all subjects' chapterwise question banks with verified answer keys for a one-time fee of ₹899/- INR.
                       </p>
                     </div>
 
                     {/* Compulsory Credentials Notice */}
-                    <div className="rounded-lg bg-muted/60 p-2.5 text-2xs text-muted-foreground text-left sm:text-justify leading-relaxed">
-                      <strong>Registration Requirements:</strong> Mobile number and email address are compulsory for candidate records. No OTP is needed. Only your password is required to create and secure your candidate account.
+                    <div className="rounded-xl bg-muted/60 p-3 text-xs sm:text-sm text-muted-foreground text-left leading-relaxed">
+                      <strong className="text-foreground">Registration Requirements:</strong> Mobile number and email address are compulsory for candidate records. No OTP is needed. Only your password is required to create and secure your candidate account.
                     </div>
 
-                    <div className="space-y-1.5">
-                      <Label className="text-xs font-semibold flex items-center gap-1.5">
-                        <User className="w-3.5 h-3.5 text-muted-foreground" />Student Full Name *
+                    <div className="space-y-1.5 text-left">
+                      <Label className="text-sm font-semibold text-foreground flex items-center gap-2 text-left">
+                        <User className="w-4 h-4 text-muted-foreground" />Student Full Name *
                       </Label>
                       <Input
                         placeholder="e.g. Ananya Deshmukh"
                         value={regName}
                         onChange={e => setRegName(e.target.value)}
-                        className={errors.regName ? 'border-destructive' : ''}
+                        className={`h-11 text-sm text-left ${errors.regName ? 'border-destructive' : ''}`}
                       />
-                      {errors.regName && <p className="text-xs text-destructive">{errors.regName}</p>}
+                      {errors.regName && <p className="text-xs text-destructive text-left">{errors.regName}</p>}
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div className="space-y-1.5">
-                        <Label className="text-xs font-semibold flex items-center gap-1.5">
-                          <Mail className="w-3.5 h-3.5 text-muted-foreground" />Email Address * (Compulsory)
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+                      <div className="space-y-1.5 text-left">
+                        <Label className="text-sm font-semibold text-foreground flex items-center gap-2 text-left">
+                          <Mail className="w-4 h-4 text-muted-foreground" />Email Address * (Compulsory)
                         </Label>
                         <Input
                           type="email"
                           placeholder="ananya@example.com"
                           value={regEmail}
                           onChange={e => setRegEmail(e.target.value)}
-                          className={errors.regEmail ? 'border-destructive' : ''}
+                          className={`h-11 text-sm text-left ${errors.regEmail ? 'border-destructive' : ''}`}
                         />
-                        {errors.regEmail && <p className="text-xs text-destructive">{errors.regEmail}</p>}
+                        {errors.regEmail && <p className="text-xs text-destructive text-left">{errors.regEmail}</p>}
                       </div>
 
-                      <div className="space-y-1.5">
-                        <Label className="text-xs font-semibold flex items-center gap-1.5">
-                          <Phone className="w-3.5 h-3.5 text-muted-foreground" />Mobile Number * (Compulsory)
+                      <div className="space-y-1.5 text-left">
+                        <Label className="text-sm font-semibold text-foreground flex items-center gap-2 text-left">
+                          <Phone className="w-4 h-4 text-muted-foreground" />Mobile Number * (Compulsory)
                         </Label>
                         <Input
                           type="tel"
                           placeholder="10-digit mobile number"
                           value={regPhone}
                           onChange={e => setRegPhone(e.target.value)}
-                          className={errors.regPhone ? 'border-destructive' : ''}
+                          className={`h-11 text-sm text-left ${errors.regPhone ? 'border-destructive' : ''}`}
                         />
-                        {errors.regPhone && <p className="text-xs text-destructive">{errors.regPhone}</p>}
+                        {errors.regPhone && <p className="text-xs text-destructive text-left">{errors.regPhone}</p>}
                       </div>
                     </div>
 
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <Label className="text-xs font-semibold flex items-center gap-1.5">
-                          <Lock className="w-3.5 h-3.5 text-muted-foreground" />Password * (Compulsory)
+                    <div className="space-y-1.5 text-left">
+                      <div className="flex items-center justify-between text-left">
+                        <Label className="text-sm font-semibold text-foreground flex items-center gap-2 text-left">
+                          <Lock className="w-4 h-4 text-muted-foreground" />Password * (Compulsory)
                         </Label>
-                        <span className="text-2xs text-muted-foreground font-medium">No OTP needed</span>
+                        <span className="text-xs text-muted-foreground font-semibold">No OTP needed</span>
                       </div>
                       <Input
                         type="password"
                         placeholder="Min 6 characters (just password needed)"
                         value={regPassword}
                         onChange={e => setRegPassword(e.target.value)}
-                        className={errors.regPassword ? 'border-destructive' : ''}
+                        className={`h-11 text-sm text-left ${errors.regPassword ? 'border-destructive' : ''}`}
                       />
-                      {errors.regPassword && <p className="text-xs text-destructive">{errors.regPassword}</p>}
+                      {errors.regPassword && <p className="text-xs text-destructive text-left">{errors.regPassword}</p>}
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div className="space-y-1.5">
-                        <Label className="text-xs font-semibold">Current Class / Grade *</Label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+                      <div className="space-y-1.5 text-left">
+                        <Label className="text-sm font-semibold text-foreground text-left">Current Class / Grade *</Label>
                         <Select value={regGrade} onValueChange={setRegGrade}>
-                          <SelectTrigger>
+                          <SelectTrigger className="h-11 text-sm text-left">
                             <SelectValue placeholder="Select class" />
                           </SelectTrigger>
                           <SelectContent>
@@ -550,10 +550,10 @@ export default function LoginPage() {
                         </Select>
                       </div>
 
-                      <div className="space-y-1.5">
-                        <Label className="text-xs font-semibold">Board *</Label>
-                        <Select value={regBoard} onValueChange={setBoard => setRegBoard(setBoard)}>
-                          <SelectTrigger>
+                      <div className="space-y-1.5 text-left">
+                        <Label className="text-sm font-semibold text-foreground text-left">Educational Board *</Label>
+                        <Select value={regBoard} onValueChange={setRegBoard}>
+                          <SelectTrigger className="h-11 text-sm text-left">
                             <SelectValue placeholder="Select board" />
                           </SelectTrigger>
                           <SelectContent>
@@ -565,18 +565,19 @@ export default function LoginPage() {
                       </div>
                     </div>
 
-                    <div className="space-y-1.5">
-                      <Label className="text-xs font-semibold flex items-center gap-1.5">
-                        <School className="w-3.5 h-3.5 text-muted-foreground" />School / Institution Name (Optional)
+                    <div className="space-y-1.5 text-left">
+                      <Label className="text-sm font-semibold text-foreground flex items-center gap-2 text-left">
+                        <School className="w-4 h-4 text-muted-foreground" />School / Institution Name (Optional)
                       </Label>
                       <Input
                         placeholder="e.g. Delhi Public School, R.K. Puram"
                         value={regSchool}
                         onChange={e => setRegSchool(e.target.value)}
+                        className="h-11 text-sm text-left"
                       />
                     </div>
 
-                    <Button type="submit" disabled={isSubmitting} className="w-full font-semibold cursor-pointer mt-1">
+                    <Button type="submit" disabled={isSubmitting} className="w-full font-bold h-11 text-sm cursor-pointer mt-1">
                       {isSubmitting ? 'Registering...' : 'Register & Start Assessment'}
                     </Button>
                   </form>
@@ -585,85 +586,85 @@ export default function LoginPage() {
                   <div className="space-y-4 text-left">
                     {/* Mailbox Spam and Bin Folders Notice */}
                     <div className="rounded-xl border border-amber-300 dark:border-amber-800 bg-amber-50/90 dark:bg-amber-950/40 p-4 text-left space-y-2">
-                      <div className="flex items-center gap-2 text-amber-800 dark:text-amber-200 font-bold text-xs">
+                      <div className="flex items-center gap-2 text-amber-900 dark:text-amber-200 font-bold text-sm text-left">
                         <AlertCircle className="w-4 h-4 flex-shrink-0 text-amber-600 dark:text-amber-400" />
                         <span>Important: Check Spam and Bin Folders</span>
                       </div>
-                      <p className="text-xs text-amber-950/90 dark:text-amber-100/90 text-left sm:text-justify leading-relaxed">
+                      <p className="text-xs sm:text-sm text-amber-950/90 dark:text-amber-100/90 text-left leading-relaxed">
                         If you do not see the password recovery notification in your primary inbox, please be sure to check both your <strong>Spam</strong> and <strong>Bin (Trash)</strong> folders of your mailbox. Email providers frequently route automated reset messages to these secondary folders.
                       </p>
                     </div>
 
                     {!forgotSent ? (
-                      <form onSubmit={handleSendForgotEmail} className="space-y-4">
-                        <div className="space-y-1.5">
-                          <Label className="text-xs font-semibold flex items-center gap-1.5">
-                            <Mail className="w-3.5 h-3.5 text-muted-foreground" />Registered Email Address *
+                      <form onSubmit={handleSendForgotEmail} className="space-y-4 text-left">
+                        <div className="space-y-1.5 text-left">
+                          <Label className="text-sm font-semibold text-foreground flex items-center gap-2 text-left">
+                            <Mail className="w-4 h-4 text-muted-foreground" />Registered Email Address *
                           </Label>
                           <Input
                             type="email"
                             placeholder="e.g. rahul.sharma@example.com"
                             value={forgotEmail}
                             onChange={e => setForgotEmail(e.target.value)}
-                            className={errors.forgotEmail ? 'border-destructive' : ''}
+                            className={`h-11 text-sm text-left ${errors.forgotEmail ? 'border-destructive' : ''}`}
                           />
-                          {errors.forgotEmail && <p className="text-xs text-destructive">{errors.forgotEmail}</p>}
+                          {errors.forgotEmail && <p className="text-xs text-destructive text-left">{errors.forgotEmail}</p>}
                         </div>
 
-                        <Button type="submit" disabled={isSubmitting} className="w-full font-semibold cursor-pointer">
+                        <Button type="submit" disabled={isSubmitting} className="w-full font-bold h-11 text-sm cursor-pointer">
                           {isSubmitting ? 'Generating Reset Instructions...' : 'Send Password Reset Link'}
                         </Button>
                       </form>
                     ) : (
-                      <form onSubmit={handleCompletePasswordReset} className="space-y-4">
-                        <div className="rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 p-3 text-xs text-emerald-800 dark:text-emerald-200 space-y-1">
-                          <p className="font-semibold flex items-center gap-1.5">
+                      <form onSubmit={handleCompletePasswordReset} className="space-y-4 text-left">
+                        <div className="rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 p-3.5 text-sm text-emerald-900 dark:text-emerald-200 space-y-1.5 text-left">
+                          <p className="font-bold flex items-center gap-2 text-left">
                             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                             Reset Link Active for {forgotEmail}
                           </p>
-                          <p className="text-2xs text-muted-foreground text-left sm:text-justify leading-relaxed">
+                          <p className="text-xs sm:text-sm text-muted-foreground text-left leading-relaxed">
                             Reset authorization verified. You can now set your new password directly below. Please remember to check your spam and bin/trash folders if you are also looking for the email record.
                           </p>
                         </div>
 
-                        <div className="space-y-1.5">
-                          <Label className="text-xs font-semibold flex items-center gap-1.5">
-                            <Lock className="w-3.5 h-3.5 text-muted-foreground" />New Password *
+                        <div className="space-y-1.5 text-left">
+                          <Label className="text-sm font-semibold text-foreground flex items-center gap-2 text-left">
+                            <Lock className="w-4 h-4 text-muted-foreground" />New Password *
                           </Label>
-                          <div className="relative">
+                          <div className="relative text-left">
                             <Input
                               type={showNewPassword ? 'text' : 'password'}
                               placeholder="Min 6 characters"
                               value={newPassword}
                               onChange={e => setNewPassword(e.target.value)}
-                              className={errors.newPassword ? 'border-destructive pr-10' : 'pr-10'}
+                              className={`h-11 text-sm text-left ${errors.newPassword ? 'border-destructive pr-10' : 'pr-10'}`}
                             />
                             <button
                               type="button"
                               onClick={() => setShowNewPassword(p => !p)}
-                              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
+                              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
                             >
                               {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
                           </div>
-                          {errors.newPassword && <p className="text-xs text-destructive">{errors.newPassword}</p>}
+                          {errors.newPassword && <p className="text-xs text-destructive text-left">{errors.newPassword}</p>}
                         </div>
 
-                        <div className="space-y-1.5">
-                          <Label className="text-xs font-semibold flex items-center gap-1.5">
-                            <Lock className="w-3.5 h-3.5 text-muted-foreground" />Confirm New Password *
+                        <div className="space-y-1.5 text-left">
+                          <Label className="text-sm font-semibold text-foreground flex items-center gap-2 text-left">
+                            <Lock className="w-4 h-4 text-muted-foreground" />Confirm New Password *
                           </Label>
                           <Input
                             type="password"
                             placeholder="Repeat new password"
                             value={confirmPassword}
                             onChange={e => setConfirmPassword(e.target.value)}
-                            className={errors.confirmPassword ? 'border-destructive' : ''}
+                            className={`h-11 text-sm text-left ${errors.confirmPassword ? 'border-destructive' : ''}`}
                           />
-                          {errors.confirmPassword && <p className="text-xs text-destructive">{errors.confirmPassword}</p>}
+                          {errors.confirmPassword && <p className="text-xs text-destructive text-left">{errors.confirmPassword}</p>}
                         </div>
 
-                        <Button type="submit" disabled={isSubmitting} className="w-full font-semibold cursor-pointer">
+                        <Button type="submit" disabled={isSubmitting} className="w-full font-bold h-11 text-sm cursor-pointer">
                           {isSubmitting ? 'Updating Password...' : 'Save New Password & Sign In'}
                         </Button>
                       </form>
@@ -673,9 +674,9 @@ export default function LoginPage() {
                       <button
                         type="button"
                         onClick={() => { setMode('login'); setErrors({}); }}
-                        className="text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer inline-flex items-center gap-1 font-medium"
+                        className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer inline-flex items-center gap-1.5 font-medium"
                       >
-                        <ArrowLeft className="w-3.5 h-3.5" />Return to Sign In
+                        <ArrowLeft className="w-4 h-4" />Return to Sign In
                       </button>
                     </div>
                   </div>
@@ -685,7 +686,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setPage('landing')}
-                    className="text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                    className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                   >
                     ← Continue directly as Guest to Assessment
                   </button>

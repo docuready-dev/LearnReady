@@ -68,10 +68,10 @@ export default function PaymentModal({ open, onOpenChange, onSuccess }: PaymentM
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+      <AlertDialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto font-delight text-left">
         <AlertDialogHeader className="text-left space-y-2">
           <div className="flex items-center justify-between">
-            <Badge className="bg-primary/10 text-primary border-primary/30 text-xs">
+            <Badge className="bg-primary/10 text-primary border-primary/30 text-xs font-semibold px-2.5 py-1">
               LearnReady Pro Upgrade
             </Badge>
             <button
@@ -84,31 +84,31 @@ export default function PaymentModal({ open, onOpenChange, onSuccess }: PaymentM
           <AlertDialogTitle className="text-2xl font-bold tracking-tight text-foreground text-left">
             Unlock All Subjects' Chapterwise Question Bank
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-xs text-muted-foreground text-left text-justify">
+          <AlertDialogDescription className="text-sm text-muted-foreground text-left leading-relaxed">
             Get lifetime unlimited access to all subjects' chapterwise question bank with verified answer keys, step-by-step solutions, and permanent candidate archiving.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         {!paymentComplete ? (
-          <div className="space-y-4 pt-2">
+          <div className="space-y-4 pt-2 text-left">
             {/* Price Box */}
-            <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 flex items-center justify-between">
-              <div>
-                <p className="text-xs font-semibold text-primary">One-Time Fee (Post 7-Day Trial)</p>
-                <p className="text-xs text-muted-foreground mt-0.5">Lifetime Access · No recurring charges</p>
+            <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 flex items-center justify-between text-left">
+              <div className="text-left">
+                <p className="text-sm font-bold text-primary text-left">One-Time Fee (Post 7-Day Trial)</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 text-left">Lifetime Access · No recurring charges</p>
               </div>
               <div className="text-right">
-                <span className="text-2xl font-extrabold text-foreground">₹899</span>
-                <span className="text-xs text-muted-foreground ml-1">INR</span>
+                <span className="text-3xl font-extrabold text-foreground">₹899</span>
+                <span className="text-xs font-semibold text-muted-foreground ml-1">INR</span>
               </div>
             </div>
 
             {/* Inclusions */}
-            <div className="space-y-2 rounded-lg bg-muted/50 p-3 text-xs text-muted-foreground text-left">
-              <p className="font-semibold text-foreground flex items-center gap-1.5 text-xs">
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />What You Receive Immediately:
+            <div className="space-y-2 rounded-xl bg-muted/60 p-4 text-sm text-muted-foreground text-left">
+              <p className="font-bold text-foreground flex items-center gap-2 text-sm text-left">
+                <Sparkles className="w-4 h-4 text-amber-500" />What You Receive Immediately:
               </p>
-              <ul className="space-y-1 text-2xs pl-4 list-disc text-left">
+              <ul className="space-y-1.5 text-xs sm:text-sm pl-4 list-disc text-left leading-relaxed">
                 <li>All subjects' comprehensive chapterwise question bank (Classes 9 to 12).</li>
                 <li>Full verified answer key with step-by-step explanatory notes.</li>
                 <li>Mathematics, Physics, Chemistry, Biology, Commerce & English.</li>
@@ -117,13 +117,13 @@ export default function PaymentModal({ open, onOpenChange, onSuccess }: PaymentM
             </div>
 
             {/* Payment Method Switcher */}
-            <div className="space-y-2">
-              <Label className="text-xs font-semibold text-left block">Select Payment Method</Label>
-              <div className="grid grid-cols-2 gap-2">
+            <div className="space-y-2 text-left">
+              <Label className="text-sm font-semibold text-foreground text-left block">Select Payment Method</Label>
+              <div className="grid grid-cols-2 gap-2 text-left">
                 <button
                   type="button"
                   onClick={() => setPayMethod('upi')}
-                  className={`p-2.5 rounded-lg border text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                  className={`p-3 rounded-xl border text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                     payMethod === 'upi' ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground hover:bg-muted'
                   }`}
                 >
@@ -132,7 +132,7 @@ export default function PaymentModal({ open, onOpenChange, onSuccess }: PaymentM
                 <button
                   type="button"
                   onClick={() => setPayMethod('card')}
-                  className={`p-2.5 rounded-lg border text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                  className={`p-3 rounded-xl border text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer ${
                     payMethod === 'card' ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground hover:bg-muted'
                   }`}
                 >
@@ -142,34 +142,34 @@ export default function PaymentModal({ open, onOpenChange, onSuccess }: PaymentM
             </div>
 
             {/* Payment Form */}
-            <form onSubmit={handlePay} className="space-y-3.5">
+            <form onSubmit={handlePay} className="space-y-4 text-left">
               {payMethod === 'upi' ? (
                 <div className="space-y-1.5 text-left">
-                  <Label htmlFor="upiId" className="text-xs">UPI ID / VPA</Label>
+                  <Label htmlFor="upiId" className="text-sm font-semibold text-foreground text-left">UPI ID / VPA</Label>
                   <Input
                     id="upiId"
                     placeholder="e.g. mobile@upi or student@okhdfcbank"
                     value={upiId}
                     onChange={e => setUpiId(e.target.value)}
-                    className="text-xs"
+                    className="h-11 text-sm text-left"
                     required
                   />
-                  <p className="text-2xs text-muted-foreground">Supported: Google Pay, PhonePe, Paytm, BHIM</p>
+                  <p className="text-xs text-muted-foreground text-left">Supported: Google Pay, PhonePe, Paytm, BHIM</p>
                 </div>
               ) : (
-                <div className="space-y-2 text-left">
-                  <div className="space-y-1">
-                    <Label htmlFor="cardNumber" className="text-xs">Card Number</Label>
-                    <Input id="cardNumber" placeholder="4532 •••• •••• 8892" defaultValue="4532 8920 1192 8892" className="text-xs" required />
+                <div className="space-y-3 text-left">
+                  <div className="space-y-1 text-left">
+                    <Label htmlFor="cardNumber" className="text-sm font-semibold text-foreground text-left">Card Number</Label>
+                    <Input id="cardNumber" placeholder="4532 •••• •••• 8892" defaultValue="4532 8920 1192 8892" className="h-11 text-sm text-left" required />
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <Label htmlFor="cardExpiry" className="text-xs">Valid Thru</Label>
-                      <Input id="cardExpiry" placeholder="MM/YY" defaultValue="08/29" className="text-xs" required />
+                  <div className="grid grid-cols-2 gap-2 text-left">
+                    <div className="text-left">
+                      <Label htmlFor="cardExpiry" className="text-sm font-semibold text-foreground text-left">Valid Thru</Label>
+                      <Input id="cardExpiry" placeholder="MM/YY" defaultValue="08/29" className="h-11 text-sm text-left" required />
                     </div>
-                    <div>
-                      <Label htmlFor="cardCvv" className="text-xs">CVV</Label>
-                      <Input id="cardCvv" type="password" maxLength={3} placeholder="•••" defaultValue="123" className="text-xs" required />
+                    <div className="text-left">
+                      <Label htmlFor="cardCvv" className="text-sm font-semibold text-foreground text-left">CVV</Label>
+                      <Input id="cardCvv" type="password" maxLength={3} placeholder="•••" defaultValue="123" className="h-11 text-sm text-left" required />
                     </div>
                   </div>
                 </div>
@@ -177,7 +177,7 @@ export default function PaymentModal({ open, onOpenChange, onSuccess }: PaymentM
 
               <Button
                 type="submit"
-                className="w-full font-semibold cursor-pointer py-2.5"
+                className="w-full font-bold cursor-pointer h-12 text-sm sm:text-base"
                 size="lg"
                 disabled={isProcessing}
               >
@@ -192,27 +192,27 @@ export default function PaymentModal({ open, onOpenChange, onSuccess }: PaymentM
               </Button>
             </form>
 
-            <div className="flex items-center justify-center gap-1.5 text-2xs text-muted-foreground pt-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+            <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground pt-1 text-left">
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
               <span>256-bit encrypted secure checkout. Instant digital delivery.</span>
             </div>
           </div>
         ) : (
           /* Payment Success State */
           <div className="space-y-4 pt-2 text-left">
-            <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-900 text-xs space-y-1.5 text-left">
-              <div className="flex items-center gap-2">
+            <div className="p-4 sm:p-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-950 text-sm space-y-2 text-left dark:text-emerald-200">
+              <div className="flex items-center gap-2 text-left">
                 <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                <span className="font-bold text-sm">Payment Successful (₹899 INR)</span>
+                <span className="font-bold text-base">Payment Successful (₹899 INR)</span>
               </div>
-              <p className="text-xs text-emerald-800 text-justify leading-relaxed">
+              <p className="text-xs sm:text-sm text-emerald-800 dark:text-emerald-300 text-left leading-relaxed">
                 Thank you for upgrading! Your account <strong>{user?.email}</strong> is now a verified LearnReady Pro Member. All subjects' chapterwise question banks and answer keys have been unlocked in your profile.
               </p>
             </div>
 
-            <div className="flex flex-col gap-2 pt-1">
+            <div className="flex flex-col gap-2 pt-1 text-left">
               <Button
-                className="w-full flex items-center justify-center gap-2 cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white"
+                className="w-full flex items-center justify-center gap-2 cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white h-11 text-sm font-semibold"
                 onClick={handleClose}
               >
                 <BookOpen className="w-4 h-4" />

@@ -58,7 +58,7 @@ export default function ExamPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col font-delight text-left">
       <header className="border-b border-border bg-card sticky top-0 z-10 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-1.5 flex items-center gap-3">
           <div className="flex items-center gap-3 flex-shrink-0">

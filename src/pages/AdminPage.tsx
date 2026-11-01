@@ -434,7 +434,7 @@ export default function AdminPage() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-foreground">Restricted Administrative Console</h1>
-              <p className="text-xs text-muted-foreground mt-2 leading-relaxed text-justify">
+              <p className="text-xs text-muted-foreground mt-2 leading-relaxed text-left">
                 This administrative console is restricted exclusively to <strong>{ADMIN_EMAIL}</strong>. Access requires authentication with the master administrator password.
               </p>
             </div>
@@ -465,7 +465,7 @@ export default function AdminPage() {
   // Authenticated Admin Dashboard Layout
   // ---------------------------------------------------------------------------
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col font-delight text-left">
       {/* Header */}
       <header className="border-b border-border bg-card sticky top-0 z-20 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
@@ -474,11 +474,11 @@ export default function AdminPage() {
             <div className="text-left">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold leading-none text-foreground">Master Control Panel</span>
-                <Badge variant="outline" className="bg-purple-100 text-purple-700 border-purple-300 text-2xs">
+                <Badge variant="outline" className="bg-purple-100 text-purple-700 border-purple-300 text-xs">
                   Super Admin
                 </Badge>
               </div>
-              <p className="text-2xs text-muted-foreground mt-0.5">{ADMIN_EMAIL}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{ADMIN_EMAIL}</p>
             </div>
           </div>
 
@@ -567,7 +567,7 @@ export default function AdminPage() {
           <Card className="shadow-sm">
             <CardContent className="pt-4 pb-3 flex items-center justify-between">
               <div>
-                <p className="text-2xs font-semibold uppercase text-muted-foreground">Test Candidates</p>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Test Candidates</p>
                 <p className="text-2xl font-bold mt-0.5">{results.length}</p>
               </div>
               <div className="w-9 h-9 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center">
@@ -579,7 +579,7 @@ export default function AdminPage() {
           <Card className="shadow-sm">
             <CardContent className="pt-4 pb-3 flex items-center justify-between">
               <div>
-                <p className="text-2xs font-semibold uppercase text-muted-foreground">Registered Users</p>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Registered Users</p>
                 <p className="text-2xl font-bold mt-0.5">{userAccounts.length}</p>
               </div>
               <div className="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
@@ -591,7 +591,7 @@ export default function AdminPage() {
           <Card className="shadow-sm">
             <CardContent className="pt-4 pb-3 flex items-center justify-between">
               <div>
-                <p className="text-2xs font-semibold uppercase text-muted-foreground">Pro Subscriptions</p>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Pro Subscriptions</p>
                 <p className="text-2xl font-bold mt-0.5">{proUsersCount}</p>
               </div>
               <div className="w-9 h-9 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center">
@@ -603,7 +603,7 @@ export default function AdminPage() {
           <Card className="shadow-sm">
             <CardContent className="pt-4 pb-3 flex items-center justify-between">
               <div>
-                <p className="text-2xs font-semibold uppercase text-muted-foreground">Revenue Logged</p>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Revenue Logged</p>
                 <p className="text-2xl font-bold mt-0.5">₹{totalRevenue.toLocaleString('en-IN')}</p>
               </div>
               <div className="w-9 h-9 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center">
@@ -672,10 +672,10 @@ export default function AdminPage() {
                             <td className="px-4 py-3 font-medium whitespace-nowrap">{r.name || r.candidateId}</td>
                             <td className="px-4 py-3 text-muted-foreground font-mono">{r.email}</td>
                             <td className="px-4 py-3 text-muted-foreground font-mono whitespace-nowrap">{r.phone || 'N/A'}</td>
-                            <td className="px-4 py-3"><Badge variant="outline" className="text-2xs">{r.board}</Badge></td>
+                            <td className="px-4 py-3"><Badge variant="outline" className="text-xs">{r.board}</Badge></td>
                             <td className="px-4 py-3 font-bold text-primary">{r.totalScore}/100</td>
                             <td className="px-4 py-3 text-muted-foreground">{r.percentile}th</td>
-                            <td className="px-4 py-3"><Badge className="text-2xs">{r.profile}</Badge></td>
+                            <td className="px-4 py-3"><Badge className="text-xs">{r.profile}</Badge></td>
                             <td className="px-4 py-3 text-muted-foreground whitespace-nowrap">{r.dateTaken ? new Date(r.dateTaken).toLocaleDateString('en-IN') : '—'}</td>
                             <td className="px-4 py-3">
                               <Button
@@ -786,18 +786,18 @@ export default function AdminPage() {
                             <td className="px-4 py-3 font-mono text-muted-foreground">{u.email}</td>
                             <td className="px-4 py-3 font-mono whitespace-nowrap text-foreground">{u.phone || 'Not Provided'}</td>
                             <td className="px-4 py-3 whitespace-nowrap">{u.grade || 'Class 10'}</td>
-                            <td className="px-4 py-3"><Badge variant="outline" className="text-2xs">{u.board || 'CBSE'}</Badge></td>
+                            <td className="px-4 py-3"><Badge variant="outline" className="text-xs">{u.board || 'CBSE'}</Badge></td>
                             <td className="px-4 py-3 text-muted-foreground max-w-xs truncate">{u.school || '—'}</td>
                             <td className="px-4 py-3 text-muted-foreground whitespace-nowrap">
                               {u.registeredAt ? new Date(u.registeredAt).toLocaleDateString('en-IN') : 'Recent'}
                             </td>
                             <td className="px-4 py-3 whitespace-nowrap">
                               {u.isPaidPro ? (
-                                <Badge className="bg-emerald-600 text-white text-2xs flex items-center gap-1">
+                                <Badge className="bg-emerald-600 text-white text-xs flex items-center gap-1">
                                   <CheckCircle2 className="w-3 h-3" />Paid Pro
                                 </Badge>
                               ) : (
-                                <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300 text-2xs flex items-center gap-1">
+                                <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300 text-xs flex items-center gap-1">
                                   <Clock className="w-3 h-3" />Free Trial
                                 </Badge>
                               )}
@@ -884,9 +884,9 @@ export default function AdminPage() {
                             <td className="px-4 py-3 font-mono text-muted-foreground">{u.email}</td>
                             <td className="px-4 py-3 whitespace-nowrap">
                               {u.isPaidPro ? (
-                                <Badge className="bg-emerald-600 text-white text-2xs">Paid Pro Lifetime</Badge>
+                                <Badge className="bg-emerald-600 text-white text-xs">Paid Pro Lifetime</Badge>
                               ) : (
-                                <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300 text-2xs">
+                                <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300 text-xs">
                                   {isExpired ? 'Trial Expired' : '7-Day Free Trial'}
                                 </Badge>
                               )}
@@ -955,10 +955,10 @@ export default function AdminPage() {
                             <td className="px-4 py-3 text-muted-foreground font-mono">{p.userEmail}</td>
                             <td className="px-4 py-3 font-medium whitespace-nowrap">{p.userName}</td>
                             <td className="px-4 py-3 font-bold text-emerald-700 dark:text-emerald-400">₹{p.amount}</td>
-                            <td className="px-4 py-3 uppercase text-2xs font-semibold">{p.method}</td>
+                            <td className="px-4 py-3 uppercase text-xs font-semibold">{p.method}</td>
                             <td className="px-4 py-3 text-muted-foreground whitespace-nowrap">{new Date(p.date).toLocaleString('en-IN')}</td>
                             <td className="px-4 py-3">
-                              <Badge className="bg-emerald-600 text-white text-2xs capitalize">{p.status}</Badge>
+                              <Badge className="bg-emerald-600 text-white text-xs capitalize">{p.status}</Badge>
                             </td>
                             <td className="px-4 py-3">
                               <Button
@@ -1047,7 +1047,7 @@ export default function AdminPage() {
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="font-bold text-base text-foreground">{currentBank.subject}</h3>
-                  <Badge variant="outline" className="text-2xs">{currentBank.classLevel}</Badge>
+                  <Badge variant="outline" className="text-xs">{currentBank.classLevel}</Badge>
                 </div>
                 <p className="text-xs text-muted-foreground mt-0.5">
                   Total Chapters: <strong>{currentBank.chapters.length}</strong> • Total Questions Available:{' '}
@@ -1084,12 +1084,12 @@ export default function AdminPage() {
                         <div className="space-y-1">
                           <div className="flex items-center gap-2 flex-wrap">
                             <h4 className="font-bold text-sm text-foreground">{chap.title}</h4>
-                            <Badge variant="outline" className="text-2xs">{chap.difficulty}</Badge>
-                            <span className="text-2xs text-muted-foreground">{chap.questionCount} Questions</span>
+                            <Badge variant="outline" className="text-xs">{chap.difficulty}</Badge>
+                            <span className="text-xs text-muted-foreground">{chap.questionCount} Questions</span>
                           </div>
                           <div className="flex items-center gap-1.5 flex-wrap pt-0.5">
                             {chap.topics.map(t => (
-                              <span key={t} className="bg-muted px-2 py-0.5 rounded text-2xs text-muted-foreground">{t}</span>
+                              <span key={t} className="bg-muted px-2 py-0.5 rounded text-xs text-muted-foreground">{t}</span>
                             ))}
                           </div>
                         </div>
@@ -1122,10 +1122,10 @@ export default function AdminPage() {
                           {chap.sampleQuestions.map((qItem, idx) => (
                             <div key={idx} className="rounded-lg bg-muted/40 p-3 space-y-2 text-xs">
                               <p className="font-semibold text-foreground">Sample Item {idx + 1}: {qItem.q}</p>
-                              <div className="rounded border border-emerald-300 dark:border-emerald-800 bg-emerald-50/80 dark:bg-emerald-950/40 p-2 text-2xs text-emerald-950 dark:text-emerald-100">
+                              <div className="rounded border border-emerald-300 dark:border-emerald-800 bg-emerald-50/80 dark:bg-emerald-950/40 p-2 text-xs text-emerald-950 dark:text-emerald-100">
                                 <strong>Verified Answer Key:</strong> {qItem.answerKey}
                               </div>
-                              <p className="text-2xs text-muted-foreground leading-relaxed">
+                              <p className="text-xs text-muted-foreground leading-relaxed">
                                 <strong>Solution Note:</strong> {qItem.solutionNote}
                               </p>
                             </div>
@@ -1178,7 +1178,7 @@ export default function AdminPage() {
                       <div key={sub} className="flex items-center justify-between p-3 rounded-lg border border-border bg-card">
                         <div>
                           <p className="text-xs font-bold text-foreground">{sub}</p>
-                          <p className="text-2xs text-muted-foreground">{chapCount} Chapters in Question Bank</p>
+                          <p className="text-xs text-muted-foreground">{chapCount} Chapters in Question Bank</p>
                         </div>
                         <Button
                           variant="ghost"
@@ -1219,7 +1219,7 @@ export default function AdminPage() {
                     <div key={cls} className="flex items-center justify-between p-3 rounded-lg border border-border bg-card">
                       <div>
                         <p className="text-xs font-bold text-foreground">{cls}</p>
-                        <p className="text-2xs text-muted-foreground">Active Cohort Target</p>
+                        <p className="text-xs text-muted-foreground">Active Cohort Target</p>
                       </div>
                       <Button
                         variant="ghost"
@@ -1542,7 +1542,7 @@ export default function AdminPage() {
                   value={jsonBatchContent}
                   onChange={e => setJsonBatchContent(e.target.value)}
                   rows={8}
-                  className="font-mono text-2xs"
+                  className="font-mono text-xs"
                   required
                 />
                 <div className="flex justify-end gap-2 pt-2 border-t border-border">
