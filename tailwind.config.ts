@@ -10,8 +10,8 @@ const tailwindConfig: Config = {
   theme: {
     extend: {
       fontFamily: {
-        delight: ["'delight'", "'Plus Jakarta Sans'", 'var(--font-sans)', ...defaultTheme.fontFamily.sans],
-        sans: ['var(--font-sans)', ...defaultTheme.fontFamily.sans],
+        delight: ["'Delight'", "'delight'", "'Plus Jakarta Sans'", 'var(--font-sans)', ...defaultTheme.fontFamily.sans],
+        sans: ["'Delight'", "'delight'", 'var(--font-sans)', ...defaultTheme.fontFamily.sans],
         serif: ['var(--font-serif)', ...defaultTheme.fontFamily.serif],
         mono: ['var(--font-mono)', ...defaultTheme.fontFamily.mono],
       },
