@@ -39,7 +39,6 @@ import {
   Edit,
   CheckCircle2,
   Clock,
-  Sparkles,
   Upload,
   FileJson,
   X,
@@ -594,8 +593,8 @@ export default function AdminPage() {
                 <p className="text-xs font-semibold uppercase text-muted-foreground">Pro Subscriptions</p>
                 <p className="text-2xl font-bold mt-0.5">{proUsersCount}</p>
               </div>
-              <div className="w-9 h-9 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center">
-                <Sparkles className="w-4 h-4" />
+              <div className="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center">
+                <CheckCircle2 className="w-4 h-4" />
               </div>
             </CardContent>
           </Card>
@@ -621,7 +620,7 @@ export default function AdminPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <h2 className="text-lg font-bold text-foreground">National Results & Scoring Records</h2>
-                <p className="text-xs text-muted-foreground">Student diagnostic dossiers, percentile rankings, and RIASEC stream matches.</p>
+                <p className="text-xs text-muted-foreground">Student test reports, percentile rankings, and stream matches.</p>
               </div>
               <Button size="sm" variant="outline" onClick={handleExportCSV} className="cursor-pointer text-xs self-start sm:self-auto">
                 <Download className="w-3.5 h-3.5 mr-1.5" />Export All Results (CSV)
@@ -858,7 +857,7 @@ export default function AdminPage() {
             <Card className="shadow-sm">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-bold flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-amber-600" />Candidate Tier Control Panel
+                  <CreditCard className="w-4 h-4 text-primary" />Candidate Tier Control Panel
                 </CardTitle>
                 <CardDescription className="text-xs">
                   Grant or revoke access to chapterwise question banks and verified answer keys in self-service mode.
@@ -1497,7 +1496,7 @@ export default function AdminPage() {
                 <div className="space-y-1">
                   <Label className="text-xs font-semibold">Step-by-Step Solution Note</Label>
                   <Textarea
-                    placeholder="Provide full pedagogical solution notes for candidate review."
+                    placeholder="Provide step-by-step solution notes for student review."
                     value={newChapSolution}
                     onChange={e => setNewChapSolution(e.target.value)}
                     rows={2}

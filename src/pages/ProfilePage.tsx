@@ -22,7 +22,6 @@ import {
   Lock,
   Save,
   Clock,
-  Sparkles,
   BookOpen,
   CheckCircle2,
   FileText,
@@ -225,10 +224,10 @@ export default function ProfilePage() {
             {!user.isPaidPro && (
               <Button
                 size="sm"
-                className="cursor-pointer bg-gradient-to-r from-primary to-blue-700 text-white font-bold flex items-center gap-2 shadow-sm h-10 px-4 text-sm"
+                className="cursor-pointer bg-primary hover:bg-primary/90 text-white font-semibold flex items-center gap-2 h-10 px-4 text-sm"
                 onClick={() => setShowPaymentModal(true)}
               >
-                <Sparkles className="w-4 h-4 text-amber-300" />
+                <BookOpen className="w-4 h-4" />
                 Unlock Question Bank (₹899)
               </Button>
             )}
@@ -358,7 +357,7 @@ export default function ProfilePage() {
                   <FileText className="w-5 h-5 text-primary" />My Assessment History & Reports
                 </CardTitle>
                 <p className="text-sm text-muted-foreground mt-0.5 text-left leading-relaxed">
-                  All your past cognitive battery sessions, All-India percentiles, and academic stream dossiers are archived here.
+                  All your past assessment scores, national percentiles, and stream recommendations are saved here.
                 </p>
               </div>
               <Button
@@ -425,7 +424,7 @@ export default function ProfilePage() {
                         }}
                         className="cursor-pointer text-sm font-semibold h-10 px-4"
                       >
-                        View Full Dossier
+                        View Full Report
                       </Button>
                       <Button
                         variant="ghost"
@@ -564,20 +563,20 @@ export default function ProfilePage() {
 
             {/* Upgrade Callout if not Paid */}
             {!user.isPaidPro && (
-              <div className="p-5 rounded-2xl bg-gradient-to-r from-amber-50 to-primary/5 border border-amber-200 text-left space-y-2.5 dark:from-amber-950/20 dark:to-primary/10 dark:border-amber-800">
+              <div className="p-5 rounded-xl border border-border bg-muted/40 text-left space-y-2">
                 <div className="flex items-center gap-2 text-left">
-                  <Sparkles className="w-4 h-4 text-amber-600" />
-                  <span className="font-bold text-base text-foreground text-left">Post 7-Day Trial Upgrade (₹899/- INR)</span>
+                  <BookOpen className="w-4 h-4 text-primary" />
+                  <span className="font-bold text-base text-foreground text-left">Unlock All Subjects Question Bank (₹899 One-Time)</span>
                 </div>
                 <p className="text-sm text-muted-foreground text-left leading-relaxed">
-                  Your registration comes with a free 7-day diagnostic assessment trial. After the trial (or anytime now), a one-time fee of <strong>₹899/- INR</strong> provides full access to all subjects' chapterwise question bank with verified answer keys across Mathematics, Physics, Chemistry, Biology, Commerce & English.
+                  Your registration comes with a free 7-day assessment trial. For a one-time fee of <strong>₹899 INR</strong>, unlock the complete chapter-wise question bank with verified step-by-step answer keys across Mathematics, Physics, Chemistry, Biology, Commerce, and English.
                 </p>
                 <Button
                   size="sm"
-                  className="cursor-pointer bg-primary hover:bg-primary/90 text-white font-bold h-11 px-5 text-sm mt-1"
+                  className="cursor-pointer bg-primary hover:bg-primary/90 text-white font-semibold h-10 px-5 text-sm mt-1"
                   onClick={() => setShowPaymentModal(true)}
                 >
-                  Unlock All Subjects Question Bank for ₹899 INR
+                  Unlock Question Banks for ₹899
                 </Button>
               </div>
             )}

@@ -1,7 +1,7 @@
 import { StreamRecommendation, STREAM_DATA, StreamType } from '../utils/scoring';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { Sparkles, Star } from 'lucide-react';
+import { GraduationCap, Star } from 'lucide-react';
 
 interface Props {
   stream: StreamRecommendation;
@@ -50,7 +50,7 @@ export default function StreamSection({ stream, educationLevel }: Props) {
       {/* Header */}
       <div className={cn('px-6 py-4 flex items-center justify-between', meta.bgClass, meta.borderClass, 'border-b-2')}>
         <div className="flex items-center gap-3">
-          <Sparkles className={cn('w-5 h-5', meta.colorClass)} />
+          <GraduationCap className={cn('w-5 h-5', meta.colorClass)} />
           <div>
             <p className={cn('font-bold text-base', meta.colorClass)}>
               Stream Aptitude Analysis

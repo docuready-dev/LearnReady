@@ -18,7 +18,6 @@ import {
   ShieldCheck,
   CheckCircle2,
   BookOpen,
-  Sparkles,
   X,
   Lock
 } from 'lucide-react';
@@ -106,13 +105,13 @@ export default function PaymentModal({ open, onOpenChange, onSuccess }: PaymentM
             {/* Inclusions */}
             <div className="space-y-2 rounded-xl bg-muted/60 p-4 text-sm text-muted-foreground text-left">
               <p className="font-bold text-foreground flex items-center gap-2 text-sm text-left">
-                <Sparkles className="w-4 h-4 text-amber-500" />What You Receive Immediately:
+                <CheckCircle2 className="w-4 h-4 text-primary" />Included in this package:
               </p>
               <ul className="space-y-1.5 text-xs sm:text-sm pl-4 list-disc text-left leading-relaxed">
-                <li>All subjects' comprehensive chapterwise question bank (Classes 9 to 12).</li>
-                <li>Full verified answer key with step-by-step explanatory notes.</li>
-                <li>Mathematics, Physics, Chemistry, Biology, Commerce & English.</li>
-                <li>Downloadable printable PDF bundles and online question browser.</li>
+                <li>Chapter-wise questions for all subjects (Classes 9 to 12).</li>
+                <li>Complete answer keys with step-by-step explanatory notes.</li>
+                <li>Mathematics, Physics, Chemistry, Biology, Commerce, and English.</li>
+                <li>Online question browser and printable formats.</li>
               </ul>
             </div>
 
