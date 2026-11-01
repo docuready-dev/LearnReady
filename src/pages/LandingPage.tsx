@@ -52,7 +52,7 @@ const MODES: { id: TestMode; icon: any; title: string; time: string; questions: 
 
 export default function LandingPage() {
   const { startExam, setPage, state, resetExam } = useExam();
-  const { user, logout, setAuthTab } = useAuth();
+  const { user, logout, setAuthTab, handleLogoClick } = useAuth();
   const [form, setFormState] = useState(() => {
     try {
       const saved = sessionStorage.getItem(DRAFT_FORM_KEY);
@@ -154,7 +154,14 @@ export default function LandingPage() {
       <header className="border-b border-border bg-card px-4 py-2">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={LOGO_URL} alt="LearnReady" style={{ height: '36px', width: 'auto' }} className="object-contain" />
+            <img
+              src={LOGO_URL}
+              alt="LearnReady"
+              style={{ height: '50px', width: 'auto' }}
+              className="object-contain cursor-pointer select-none transition-transform active:scale-95"
+              onClick={handleLogoClick}
+              title="LearnReady"
+            />
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5 hidden sm:flex items-center gap-1.5">
@@ -180,12 +187,6 @@ export default function LandingPage() {
                 <User className="w-3.5 h-3.5" />Sign In / Register
               </button>
             )}
-            <button
-              onClick={() => setPage('admin')}
-              className="text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded hover:bg-muted cursor-pointer"
-            >
-              Admin
-            </button>
           </div>
         </div>
       </header>
@@ -193,7 +194,14 @@ export default function LandingPage() {
       <main className="flex-1 flex items-center justify-center p-6">
         <div className="w-full max-w-2xl space-y-7">
           <div className="text-center space-y-3">
-            <img src={LOGO_URL} alt="LearnReady" className="mx-auto object-contain" style={{ height: '52px', width: 'auto' }} />
+            <img
+              src={LOGO_URL}
+              alt="LearnReady"
+              className="mx-auto object-contain cursor-pointer select-none transition-transform active:scale-95"
+              style={{ height: '76px', width: 'auto' }}
+              onClick={handleLogoClick}
+              title="LearnReady"
+            />
             <h2 className="text-3xl font-bold text-foreground tracking-tight">Aptitude & Interest Battery</h2>
             <p className="text-muted-foreground max-w-lg mx-auto">
               A nationally benchmarked diagnostic assessment for Class 9–12 students. Each session is uniquely randomised — no two tests are identical.

@@ -1,5 +1,6 @@
 import { useMemo, useRef, useEffect } from 'react';
 import { useExam } from '../context/ExamContext';
+import { useAuth } from '../context/AuthContext';
 import { calcAptitudeScore, calcPersonalityResult, calcTotalScore, PROFILE_DESCRIPTIONS, calcStreamRecommendation } from '../utils/scoring';
 import StreamSection from '../components/StreamSection';
 import { getBenchmarkData, getBenchmarkStats, calculatePercentile, getTopStudents, getPercentileLabel } from '../data/benchmark';
@@ -12,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer, Tooltip } from 'recharts';
-import { Download, Home, TrendingUp, Trophy, Users, GraduationCap, Shield } from 'lucide-react';
+import { Download, Home, TrendingUp, Trophy, Users, GraduationCap } from 'lucide-react';
 import { saveResult } from '../api/results';
 import { RiasecCode } from '../types';
 
@@ -54,6 +55,7 @@ function ordinal(n: number) {
 
 export default function ResultsPage() {
   const { state, setPage, resetExam } = useExam();
+  const { handleLogoClick } = useAuth();
   const ids = state.questionIds;
   const hasSaved = useRef(false);
 
@@ -121,14 +123,18 @@ export default function ResultsPage() {
       <header className="border-b border-border bg-card sticky top-0 z-10 shadow-sm no-print">
         <div className="max-w-5xl mx-auto px-4 py-2 flex items-center justify-between">
           <div className="flex items-center">
-            <img src={LOGO_URL} alt="LearnReady" style={{ height: '36px', width: 'auto' }} className="object-contain" />
+            <img
+              src={LOGO_URL}
+              alt="LearnReady"
+              style={{ height: '50px', width: 'auto' }}
+              className="object-contain cursor-pointer select-none transition-transform active:scale-95"
+              onClick={handleLogoClick}
+              title="LearnReady"
+            />
           </div>
           <div className="flex gap-2 flex-wrap justify-end">
             <Button variant="outline" size="sm" onClick={() => window.print()} className="cursor-pointer">
               <Download className="w-4 h-4 mr-1.5" />Download PDF
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => setPage('admin')} className="cursor-pointer">
-              <Shield className="w-4 h-4 mr-1.5" />Admin
             </Button>
             <Button variant="outline" size="sm" onClick={() => { resetExam(); setPage('landing'); }} className="cursor-pointer">
               <Home className="w-4 h-4 mr-1.5" />New Assessment

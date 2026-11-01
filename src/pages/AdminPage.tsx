@@ -126,7 +126,7 @@ function AdminDashboard() {
       <header className="border-b border-border bg-card">
         <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={LOGO_URL} alt="LearnReady" style={{ height: '32px', width: 'auto' }} className="object-contain" />
+            <img src={LOGO_URL} alt="LearnReady" style={{ height: '48px', width: 'auto' }} className="object-contain" />
             <div>
               <p className="text-xs font-bold leading-none">Admin Panel</p>
               <p className="text-xs text-muted-foreground mt-0.5">{user?.email}</p>
@@ -246,9 +246,8 @@ function AdminDashboard() {
 }
 
 export default function AdminPage() {
-  const { user, isLoading, loginWithRedirect, loginAsAdmin } = useAuth();
+  const { user, isLoading, openAdminModal } = useAuth();
   const { setPage } = useExam();
-  const [customEmail, setCustomEmail] = useState('');
 
   if (isLoading) {
     return (
@@ -261,68 +260,34 @@ export default function AdminPage() {
     );
   }
 
-  if (!user) {
+  if (!user || user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase() || user.role !== 'admin') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-6">
-        <Card className="w-full max-w-sm shadow-lg">
-          <CardContent className="pt-8 pb-6 text-center space-y-5">
-            <img src={LOGO_URL} alt="LearnReady" className="h-10 mx-auto object-contain" />
-            <div>
-              <h1 className="text-xl font-bold">Admin Portal</h1>
-              <p className="text-sm text-muted-foreground mt-1">Authenticate as Super Admin ({ADMIN_EMAIL}) to access the results dashboard.</p>
-            </div>
-            
-            <div className="space-y-3">
-              <Button className="w-full cursor-pointer" onClick={() => loginAsAdmin()}>
-                <Shield className="w-4 h-4 mr-2" />Login as Super Admin
-              </Button>
-              
-              <div className="relative my-3">
-                <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
-                <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground">or test custom email</span></div>
-              </div>
-
-              <div className="flex gap-2">
-                <Input
-                  type="email"
-                  placeholder="Enter email"
-                  value={customEmail}
-                  onChange={e => setCustomEmail(e.target.value)}
-                  className="text-xs"
-                />
-                <Button variant="outline" size="sm" onClick={() => loginWithRedirect(customEmail)} disabled={!customEmail.includes('@')}>
-                  Enter
-                </Button>
-              </div>
-            </div>
-
-            <Button variant="ghost" size="sm" className="w-full text-muted-foreground cursor-pointer" onClick={() => setPage('landing')}>
-              <Home className="w-4 h-4 mr-1.5" />Back to Home
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  if (user.email !== ADMIN_EMAIL) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background p-6">
-        <Card className="w-full max-w-sm shadow-lg">
+        <Card className="w-full max-w-md shadow-lg border-destructive/20">
           <CardContent className="pt-8 pb-6 text-center space-y-4">
-            <div className="w-14 h-14 rounded-full bg-destructive/10 flex items-center justify-center mx-auto">
-              <ShieldOff className="w-7 h-7 text-destructive" />
+            <div className="w-14 h-14 rounded-full bg-slate-900 text-white flex items-center justify-center mx-auto shadow-sm">
+              <ShieldOff className="w-7 h-7 text-red-400" />
             </div>
             <div>
-              <h1 className="text-xl font-bold">Access Denied</h1>
-              <p className="text-sm text-muted-foreground mt-1"><strong>{user.email}</strong> does not have admin privileges.</p>
+              <h1 className="text-xl font-bold text-foreground">Restricted Console</h1>
+              <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                This administrative console is restricted exclusively to <strong>{ADMIN_EMAIL}</strong>. Access requires verification through a one-time cryptographic magic link.
+              </p>
             </div>
-            <div className="flex flex-col gap-2">
-              <Button variant="default" className="w-full" onClick={() => loginAsAdmin()}>
-                Switch to Super Admin
+            <div className="flex flex-col gap-2 pt-2">
+              <Button
+                variant="default"
+                className="w-full cursor-pointer bg-slate-900 hover:bg-slate-800 text-white"
+                onClick={() => openAdminModal()}
+              >
+                <Shield className="w-4 h-4 mr-2" />Request Magic Link
               </Button>
-              <Button variant="outline" className="w-full" onClick={() => setPage('landing')}>
-                <Home className="w-4 h-4 mr-2" />Back to Home
+              <Button
+                variant="outline"
+                className="w-full cursor-pointer"
+                onClick={() => setPage('landing')}
+              >
+                <Home className="w-4 h-4 mr-2" />Return to Platform
               </Button>
             </div>
           </CardContent>

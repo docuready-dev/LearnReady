@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useExam } from '../context/ExamContext';
+import { useAuth } from '../context/AuthContext';
 import { getSessionQuestions } from '../data/randomizer';
 import { SECTIONS } from '../data/questions';
 import Timer from '../components/Timer';
@@ -22,6 +23,7 @@ const colorMap: Record<string, string> = {
 
 export default function ExamPage() {
   const { state, timeRemaining, setPage, setAnswer, submitSection, setCurrentQuestion, setCurrentSection } = useExam();
+  const { handleLogoClick } = useAuth();
 
   useEffect(() => {
     if (state.completed) setPage('results');
@@ -60,7 +62,14 @@ export default function ExamPage() {
       <header className="border-b border-border bg-card sticky top-0 z-10 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-1.5 flex items-center gap-3">
           <div className="flex items-center gap-3 flex-shrink-0">
-            <img src={LOGO_URL} alt="LearnReady" style={{ height: '32px', width: 'auto' }} className="object-contain" />
+            <img
+              src={LOGO_URL}
+              alt="LearnReady"
+              style={{ height: '46px', width: 'auto' }}
+              className="object-contain cursor-pointer select-none transition-transform active:scale-95"
+              onClick={handleLogoClick}
+              title="LearnReady"
+            />
             {state.board && <Badge variant="outline" className="text-xs hidden md:flex">{state.board}</Badge>}
             {state.testMode === 'quick' && (
               <Badge className="text-xs hidden md:flex bg-amber-100 text-amber-700 border-amber-300 border">⚡ Quick Test</Badge>

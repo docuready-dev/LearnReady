@@ -35,7 +35,7 @@ const EDUCATION_LEVELS = [
 ];
 
 export default function LoginPage() {
-  const { user, login, register, loginAsAdmin, authTab, setAuthTab } = useAuth();
+  const { user, login, register, loginAsAdmin, authTab, setAuthTab, handleLogoClick } = useAuth();
   const { setPage } = useExam();
 
   const [mode, setMode] = useState<'login' | 'register'>(authTab || 'login');
@@ -165,14 +165,18 @@ export default function LoginPage() {
       <header className="border-b border-border bg-card px-4 py-2 sticky top-0 z-10 shadow-sm">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={LOGO_URL} alt="LearnReady" style={{ height: '36px', width: 'auto' }} className="object-contain" />
+            <img
+              src={LOGO_URL}
+              alt="LearnReady"
+              style={{ height: '50px', width: 'auto' }}
+              className="object-contain cursor-pointer select-none transition-transform active:scale-95"
+              onClick={handleLogoClick}
+              title="LearnReady"
+            />
           </div>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" onClick={() => setPage('landing')} className="cursor-pointer text-xs">
               <Home className="w-3.5 h-3.5 mr-1" />Home
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => setPage('admin')} className="cursor-pointer text-xs">
-              Admin
             </Button>
           </div>
         </div>
@@ -343,33 +347,21 @@ export default function LoginPage() {
 
                     <div className="relative my-4">
                       <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
-                      <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground text-2xs">or quick demo accounts</span></div>
+                      <div className="relative flex justify-center text-xs uppercase"><span className="bg-card px-2 text-muted-foreground text-2xs">or quick demo</span></div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="pt-1">
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
-                        className="text-xs cursor-pointer"
+                        className="w-full text-xs cursor-pointer"
                         onClick={() => {
                           setLoginEmail('student.demo@learnready.in');
                           setLoginPassword('student123');
                         }}
                       >
-                        <User className="w-3 h-3 mr-1" />Student Demo
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        className="text-xs cursor-pointer border-purple-200 text-purple-700 hover:bg-purple-50"
-                        onClick={() => {
-                          setLoginEmail(ADMIN_EMAIL);
-                          setLoginPassword('admin123');
-                        }}
-                      >
-                        <Shield className="w-3 h-3 mr-1" />Admin Account
+                        <User className="w-3.5 h-3.5 mr-1.5" />Fill Student Demo Credentials
                       </Button>
                     </div>
                   </form>
