@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎓 LearnReady Assessment Pro
+# LearnReady Assessment Pro
 ### Enterprise Cognitive Diagnostic Battery & Academic Stream Orientation Engine
 
 [![React](https://img.shields.io/badge/React-18.3.1-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
@@ -21,7 +21,7 @@
 
 </div>
 
-## 📌 Executive Overview
+## Executive Overview
 
 In secondary education across India, selecting an academic stream (Science PCM, Science PCB, Commerce, or Humanities) after Class 10 is one of the highest-stakes decisions a student faces. Traditional decisions are frequently swayed by peer pressure, societal expectations, or subjective intuition.
 
@@ -34,46 +34,46 @@ In secondary education across India, selecting an academic stream (Science PCM, 
 
 ---
 
-## 🌟 Key Capabilities
+## Key Capabilities
 
-### 🧠 1. Four-Tier Cognitive Diagnostic Battery
+### 1. Four-Tier Cognitive Diagnostic Battery
 - **Verbal Reasoning**: Reading comprehension, analogical logic, grammar nuances, and academic vocabulary.
 - **Numerical Reasoning**: Arithmetic progressions, algebra, percentages, ratio-proportion, and data interpretation.
 - **Spatial Reasoning**: 3D cube rotations, net pattern folding, geometrical sequences, and symmetry analysis.
 - **Holland RIASEC Interest Profile**: 5-point Likert psychometric scale assessing occupational tendencies across 6 vocational typologies.
 
-### ⚡ 2. Adaptive Session Randomization
+### 2. Adaptive Session Randomization
 - Powered by a deterministic Fisher-Yates shuffle engine with question seed constraints.
 - Every candidate receives a uniquely ordered subset selected from a 140+ item bank.
 - Supports **Full Assessment Mode** (90 minutes / 65 questions) and **Quick Diagnostic Mode** (30 minutes / 30 questions).
 
-### 📊 3. Normative Gaussian Distribution & Percentiles
+### 3. Normative Gaussian Distribution & Percentiles
 - Real-time Z-score mapping calculating exact national percentiles.
 - Dynamic Bell Curve visualization pinpointing candidate standing against simulated All-India cohorts.
 - Hexagonal Radar Charts juxtaposing cognitive balance against occupational orientation.
 
-### 🎯 4. Stream & Career Recommendation Engine
+### 4. Stream & Career Recommendation Engine
 - Synthesizes cognitive domain percentiles with RIASEC top traits.
 - Provides Rank 1 (Primary Match), Rank 2 (Viable Alternative), and Rank 3 (Exploratory Path) academic streams.
 - Breaks down specific Class 11–12 subject combinations (e.g., PCM with Computer Science vs Economics, Commerce with Applied Mathematics).
 
-### 🔐 5. Candidate Authentication & Registration Portal
+### 5. Candidate Authentication & Registration Portal
 - Dedicated Sign In & Sign Up flows for students and educators.
 - Auto-fills candidate credentials, grade, educational board, and school affiliation into diagnostic sessions.
 - Role-aware authorization with Super Admin routing.
 
-### 🛡️ 6. Super Admin Operations & Analytics Suite
+### 6. Super Admin Operations & Analytics Suite
 - Role-based security gate protecting national performance datasets.
 - Board-wise aggregate performance comparative charts (CBSE vs ICSE vs State Boards vs IB).
 - Full candidate search, board filtering, record deletion with confirmation, and one-click bidirectional CSV export.
 
-### 🖨️ 7. Publication-Quality PDF Report Generation
+### 7. Publication-Quality PDF Report Generation
 - Pure CSS `@media print` layout engine.
 - Instant single-click download generating multi-page diagnostic reports with institutional branding, domain scorecards, and itemized solution reviews.
 
----
+```
 
-## 🖥️ Application Views & User Journey
+## Application Views & User Journey
 
 | Screen / View | Primary Purpose & Functional Highlights |
 |---|---|
@@ -87,11 +87,12 @@ In secondary education across India, selecting an academic stream (Science PCM, 
 | **Printable Report Engine** | Pure CSS `@media print` formatted multi-page diagnostic dossier with detailed question-by-question solution breakdowns. |
 | **Super Admin Operations Suite** | Protected management portal featuring aggregate board comparison charts, candidate search/filter table, and one-click CSV export. |
 
----
+```
 
-## 🏗️ System Architecture
+## System Architecture
 
-```mermaid
+```
+mermaid
 flowchart TD
     subgraph UI ["User Interface Layer (React 18 + Tailwind)"]
         LP[LandingPage]
@@ -136,6 +137,7 @@ flowchart TD
     AP -->|Fetch Results| SS
     SS --> CSV
 ```
+```
         StreamEngine[Stream Matching Heuristic Engine]
     end
 
@@ -160,12 +162,12 @@ flowchart TD
     AC -->|Gatekeeper Check| AP
     AP -->|Fetch Results & Bookings| SS
     SS --> CSV
+    
 ```
 
----
+## Psychometric & Scoring Methodology
 
-## 📐 Psychometric & Scoring Methodology
-
+```
 ### 1. Domain Accuracy Percentage
 For each cognitive domain $d \in \{\text{verbal}, \text{numerical}, \text{spatial}\}$:
 
@@ -199,9 +201,9 @@ Candidates are classified into high-level archetypes:
 - **Creative**: Dominance in Artistic ($A$) and Investigative ($I$) traits with high Spatial reasoning.
 - **Operational / Enterprise**: Dominance in Enterprising ($E$), Conventional ($C$), and Social ($S$) traits with high Verbal reasoning.
 
----
+```
 
-## 📂 Repository Directory Layout
+## Repository Directory Layout
 
 ```
 learnready-assessment/
@@ -251,12 +253,14 @@ learnready-assessment/
 ├── tailwind.config.ts          # Design token definitions, theme extensions & colors
 ├── tsconfig.json               # TypeScript compiler configuration
 └── vite.config.ts              # Vite bundling pipeline configuration
+
 ```
 
----
 
-## 🛠️ Technology Stack & Dependencies
 
+## Technology Stack & Dependencies
+
+```
 | Layer | Technology | Purpose |
 |---|---|---|
 | **Runtime & Framework** | React 18.3.1 | Component architecture & concurrent rendering |
@@ -269,10 +273,11 @@ learnready-assessment/
 | **Toasts & Feedback** | Sonner | Smooth, non-blocking asynchronous user notifications |
 | **Headless Testing** | Puppeteer Core | Headless browser automation for UI verification |
 
----
+```
 
-## 🚀 Quick Start & Installation
+## Quick Start & Installation
 
+```
 ### Prerequisites
 - **Node.js**: v18.0.0 or higher
 - **npm**: v9.0.0 or higher (or pnpm / yarn)
@@ -319,7 +324,7 @@ To access the **National Results & Mentorship Admin Dashboard**:
 
 ---
 
-## 🔒 Security & Data Privacy
+## Security & Data Privacy
 
 - **Zero Cloud Leakage by Default**: Sensitive candidate assessment data and contact details reside strictly within sandboxed client storage (`StorageService`), requiring zero external backend database setup to operate out of the box.
 - **Idempotent Session Resumption**: Examination progress is continuously synchronized to `localStorage` under `learnready_exam_v1`, preventing accidental loss from page refreshes, tab closures, or network drops.
@@ -327,7 +332,7 @@ To access the **National Results & Mentorship Admin Dashboard**:
 
 ---
 
-## 📄 License
+## License
 
 Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for detailed terms and conditions.
 
