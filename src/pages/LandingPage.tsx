@@ -441,20 +441,20 @@ export default function LandingPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="text-xs sm:text-sm font-medium h-9 px-3.5 cursor-pointer border-border text-foreground hover:bg-muted"
+                    className="text-xs sm:text-sm font-semibold h-9 px-3.5 cursor-pointer border-border text-foreground hover:bg-muted"
                     onClick={() => setPage('profile')}
                   >
-                    View in Profile
+                    <User className="w-4 h-4 mr-1.5" />
+                    Profile & Results
                   </Button>
-                  {!user.isPaidPro && (
-                    <Button
-                      size="sm"
-                      className="text-xs sm:text-sm h-9 px-3.5 cursor-pointer font-semibold bg-primary hover:bg-primary/90 text-white"
-                      onClick={() => setShowPaymentModal(true)}
-                    >
-                      Get Question Banks (₹899)
-                    </Button>
-                  )}
+                  <Button
+                    size="sm"
+                    className="text-xs sm:text-sm h-9 px-3.5 cursor-pointer font-semibold bg-primary hover:bg-primary/90 text-white"
+                    onClick={() => setPage('profile')}
+                  >
+                    <BookOpen className="w-4 h-4 mr-1.5" />
+                    {user.isPaidPro ? 'Open Question Banks' : 'Question Banks (₹899)'}
+                  </Button>
                 </div>
               </div>
             </div>

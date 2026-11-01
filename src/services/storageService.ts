@@ -265,7 +265,31 @@ export class StorageService {
   public static getQuestionBanks(): ChapterQuestionBank[] {
     try {
       const data = localStorage.getItem(BANKS_KEY);
-      if (data) return JSON.parse(data);
+      if (data) {
+        const banks = JSON.parse(data) as ChapterQuestionBank[];
+        // Upgrade chapters with options and missing subjects
+        banks.forEach(b => {
+          const catBank = QUESTION_BANKS_CATALOG.find(cb => cb.subject.toLowerCase() === b.subject.toLowerCase());
+          if (catBank) {
+            b.chapters.forEach(c => {
+              const catChap = catBank.chapters.find(cc => cc.id === c.id);
+              if (catChap) {
+                c.sampleQuestions.forEach((sq, idx) => {
+                  if (!sq.options && catChap.sampleQuestions[idx]?.options) {
+                    sq.options = catChap.sampleQuestions[idx].options;
+                  }
+                });
+              }
+            });
+          }
+        });
+        QUESTION_BANKS_CATALOG.forEach(cb => {
+          if (!banks.some(b => b.subject.toLowerCase() === cb.subject.toLowerCase())) {
+            banks.push(cb);
+          }
+        });
+        return banks;
+      }
       // Seed with default catalog
       localStorage.setItem(BANKS_KEY, JSON.stringify(QUESTION_BANKS_CATALOG));
       return QUESTION_BANKS_CATALOG;
