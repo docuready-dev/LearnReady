@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import { Clock, BarChart3, Brain, ArrowRight, RotateCcw, GraduationCap, Zap, BookOpen, CheckCircle2, User, LogIn, UserPlus, UserCheck, Sparkles } from 'lucide-react';
+import { Clock, BarChart3, Brain, ArrowRight, RotateCcw, GraduationCap, Zap, BookOpen, CheckCircle2, User, LogIn, UserPlus, UserCheck, Sparkles, Compass, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TestMode } from '../types';
 import { INDIAN_BOARDS } from '../data/boards';
@@ -22,10 +22,10 @@ const EDUCATION_LEVELS = ['Class 9', 'Class 10 (Current)', 'Class 11', 'Class 12
 const QUICK_ELIGIBLE = ['Class 9', 'Class 10 (Current)'];
 
 const SECTIONS_INFO = [
-  { label: 'Verbal Reasoning', desc: 'Analogies, vocabulary & comprehension', cls: 'bg-blue-50 text-blue-700 border-blue-200' },
-  { label: 'Numerical Reasoning', desc: 'Arithmetic, data interpretation & series', cls: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-  { label: 'Spatial Reasoning', desc: '3D visualisation, patterns & geometry', cls: 'bg-violet-50 text-violet-700 border-violet-200' },
-  { label: 'Occupational Interests', desc: 'Holland RIASEC interest profiling', cls: 'bg-amber-50 text-amber-700 border-amber-200' },
+  { label: 'Verbal Reasoning', desc: 'Analogies, vocabulary and analytical comprehension', cls: 'bg-blue-50/70 text-blue-800 border-blue-200' },
+  { label: 'Numerical Reasoning', desc: 'Arithmetic logic, data interpretation and numerical sequences', cls: 'bg-emerald-50/70 text-emerald-800 border-emerald-200' },
+  { label: 'Spatial Reasoning', desc: '3D mental rotation, geometric patterns and spatial visualization', cls: 'bg-violet-50/70 text-violet-800 border-violet-200' },
+  { label: 'Occupational Interests', desc: 'Holland RIASEC career interest battery and vocational profiling', cls: 'bg-amber-50/70 text-amber-800 border-amber-200' },
 ];
 
 const MODES: { id: TestMode; icon: any; title: string; time: string; questions: string; desc: string; badge: string; badgeCls: string }[] = [
@@ -35,7 +35,7 @@ const MODES: { id: TestMode; icon: any; title: string; time: string; questions: 
     title: 'Full Assessment',
     time: '90 minutes',
     questions: '65 questions',
-    desc: 'Complete diagnostic with detailed national benchmarking',
+    desc: 'Complete diagnostic with detailed national benchmarking and stream recommendations',
     badge: 'Recommended',
     badgeCls: 'bg-primary/10 text-primary border-primary/30',
   },
@@ -45,7 +45,7 @@ const MODES: { id: TestMode; icon: any; title: string; time: string; questions: 
     title: 'Quick Test',
     time: '30 minutes',
     questions: '30 questions',
-    desc: 'Shorter session with same 4 sections and fewer questions',
+    desc: 'Shorter session with same 4 sections and fewer questions per section',
     badge: 'Express',
     badgeCls: 'bg-amber-50 text-amber-700 border-amber-300',
   },
@@ -155,7 +155,7 @@ export default function LandingPage() {
     setFormState(p => ({ ...p, [key]: value }));
     if (errors[key]) setErrors(p => ({ ...p, [key]: '' }));
     if (key === 'educationLevel' && !QUICK_ELIGIBLE.includes(value)) {
-      setTestMode('full'); // Reset to full if not eligible
+      setTestMode('full');
     }
   }
 
@@ -192,37 +192,57 @@ export default function LandingPage() {
     doStart();
   }
 
+  function scrollToAssessment() {
+    const el = document.getElementById('begin-assessment');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  function handleHeroBegin() {
+    if (!user) {
+      setShowAuthPrompt(true);
+      return;
+    }
+    scrollToAssessment();
+  }
+
   const displayTime = isQuickEligible && testMode === 'quick' ? '30 minutes' : '90 minutes';
   const displayQuestions = isQuickEligible && testMode === 'quick' ? '30 questions' : '65 questions';
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <header className="border-b border-border bg-card px-4 py-2">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
+    <div className="min-h-screen bg-background flex flex-col font-sans">
+      {/* Navigation Header */}
+      <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur-sm px-4 py-2.5 transition-all">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
             <img
               src={LOGO_URL}
               alt="LearnReady"
-              style={{ height: '50px', width: 'auto' }}
+              style={{ height: '48px', width: 'auto' }}
               className="object-contain cursor-pointer select-none transition-transform active:scale-95"
               onClick={handleLogoClick}
-              title="LearnReady"
+              title="LearnReady Assessment"
             />
           </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5 hidden sm:flex items-center gap-1.5">
-              <GraduationCap className="w-3.5 h-3.5" />Indian Boards 2026-27
+
+          <div className="flex items-center gap-2.5">
+            <Badge variant="outline" className="text-primary border-primary/30 bg-primary/5 hidden md:flex items-center gap-1.5 py-1 px-3 text-xs font-medium">
+              <GraduationCap className="w-3.5 h-3.5 text-primary" />
+              <span>Indian Boards 2026-27</span>
             </Badge>
+
             {user ? (
               <div className="flex items-center gap-2">
                 {user.isPaidPro ? (
-                  <Badge className="bg-emerald-600 text-white border-0 text-2xs hidden sm:flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3" />Pro Member
+                  <Badge className="bg-emerald-600 text-white border-0 text-xs py-1 px-2.5 hidden sm:flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Pro Member</span>
                   </Badge>
                 ) : trialTimeLeft ? (
-                  <Badge variant="outline" className="bg-amber-50 text-amber-900 border-amber-300 text-2xs hidden sm:flex items-center gap-1">
-                    <Clock className="w-3 h-3 text-amber-600 animate-pulse" />
-                    Trial: {trialTimeLeft.days}d {trialTimeLeft.hours}h {trialTimeLeft.minutes}m
+                  <Badge variant="outline" className="bg-amber-50 text-amber-900 border-amber-300 text-xs py-1 px-2.5 hidden sm:flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
+                    <span>Trial: {trialTimeLeft.days}d {trialTimeLeft.hours}h {trialTimeLeft.minutes}m</span>
                   </Badge>
                 ) : null}
 
@@ -230,112 +250,180 @@ export default function LandingPage() {
                   variant="outline"
                   size="sm"
                   onClick={() => setPage('profile')}
-                  className="text-xs h-8 px-2.5 font-medium border-primary/30 text-primary hover:bg-primary/5 cursor-pointer flex items-center gap-1.5"
+                  className="font-delight text-xs h-9 px-3.5 font-semibold border-primary/30 text-primary hover:bg-primary/5 cursor-pointer flex items-center gap-1.5"
                 >
                   <User className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">My Profile & Results</span>
                   <span className="sm:hidden">Profile</span>
                 </Button>
 
-                <button
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={() => logout()}
-                  className="text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded hover:bg-muted cursor-pointer"
+                  className="text-xs text-muted-foreground hover:text-foreground h-9 px-2.5 cursor-pointer"
                 >
                   Sign Out
-                </button>
+                </Button>
               </div>
             ) : (
-              <button
+              <Button
+                size="sm"
                 onClick={() => setPage('login')}
-                className="text-xs font-semibold text-primary hover:text-primary/90 transition-colors px-2.5 py-1 rounded-md bg-primary/10 hover:bg-primary/15 cursor-pointer flex items-center gap-1.5"
+                className="font-delight text-xs font-bold text-white bg-primary hover:bg-primary/90 h-9 px-4 cursor-pointer flex items-center gap-1.5 shadow-sm"
               >
-                <User className="w-3.5 h-3.5" />Sign In / Register
-              </button>
+                <User className="w-3.5 h-3.5" />
+                <span>Sign In / Register</span>
+              </Button>
             )}
           </div>
         </div>
       </header>
 
-      {/* Small Hero Section fitting the whole screen (No double hyphens, no icons) */}
-      <section className="w-full border-b border-border bg-card/50 py-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto space-y-4 text-left">
-          <div className="space-y-1.5">
-            <span className="text-2xs font-bold uppercase tracking-wider text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-md inline-block">
-              National Secondary Academic Diagnostic
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight text-left">
-              Standardized Cognitive Diagnostic and Stream Decision Architecture
+      {/* Hero Section */}
+      <section className="relative overflow-hidden border-b border-border bg-gradient-to-b from-blue-50/60 via-background to-background dark:from-blue-950/20 dark:via-background dark:to-background py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto space-y-6 text-left">
+          {/* Eyebrow Pill */}
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold">
+            <GraduationCap className="w-4 h-4 text-primary" />
+            <span>Standardized Secondary Diagnostic • Academic Session 2026-27</span>
+          </div>
+
+          {/* Hero Headline in Delight Font */}
+          <div className="space-y-4">
+            <h1 className="font-delight text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground tracking-tight leading-[1.15]">
+              Discover Your Academic Strengths.
+              <span className="block text-primary mt-1">Choose Your Stream with Confidence.</span>
             </h1>
-            <p className="text-xs sm:text-sm text-muted-foreground text-left sm:text-justify leading-relaxed max-w-4xl">
-              LearnReady is designed for secondary and senior secondary students across Indian educational boards including CBSE, ICSE, and State Boards for the 2026 to 2027 academic session. This platform provides an empirical and psychometrically calibrated assessment system to guide academic stream selection and career orientation.
+
+            {/* Concise Explanation of Assessment & WebApp in Delight Font */}
+            <p className="font-delight text-base sm:text-lg md:text-xl text-muted-foreground leading-relaxed max-w-4xl text-left sm:text-justify">
+              LearnReady is an intelligent diagnostic assessment and career orientation web application crafted for Class 9 to 12 students across CBSE, ICSE, and State Boards. Through calibrated, uniquely randomised questions in Verbal, Numerical, and Spatial reasoning combined with RIASEC vocational interest profiling, LearnReady pinpoints your core aptitudes and provides clear, data-driven recommendations for Science (PCM/PCB), Commerce, and Humanities.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-left pt-1">
-            <div className="rounded-xl border border-border bg-card p-3.5 space-y-1.5 text-left">
-              <h3 className="text-xs font-bold text-foreground">Tripartite Core Aptitude</h3>
-              <p className="text-2xs text-muted-foreground text-left sm:text-justify leading-relaxed">
-                Evaluates Verbal Reasoning for comprehension and logic, Numerical Reasoning for data interpretation, and Spatial Visualization for geometric patterns.
+          {/* Call-to-Action Buttons */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
+            <Button
+              size="lg"
+              onClick={handleHeroBegin}
+              className="font-delight text-base h-12 px-7 font-bold shadow-md hover:shadow-lg transition-all cursor-pointer bg-primary hover:bg-primary/90 text-white flex items-center justify-center gap-2.5"
+            >
+              <span>Begin Assessment</span>
+              <ArrowRight className="w-5 h-5" />
+            </Button>
+
+            {user ? (
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => setPage('profile')}
+                className="font-delight text-base h-12 px-6 font-semibold border-primary/30 text-primary hover:bg-primary/5 cursor-pointer flex items-center justify-center gap-2"
+              >
+                <User className="w-4 h-4" />
+                <span>My Profile & Diagnostic Results</span>
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => {
+                  setAuthTab('register');
+                  setPage('login');
+                }}
+                className="font-delight text-base h-12 px-6 font-semibold border-primary/30 text-primary hover:bg-primary/5 cursor-pointer flex items-center justify-center gap-2"
+              >
+                <Sparkles className="w-4 h-4 text-primary" />
+                <span>Start 7-Day Free Trial</span>
+              </Button>
+            )}
+          </div>
+
+          {/* 4 Feature Highlights Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-4">
+            <div className="rounded-xl border border-border bg-card/80 p-4 space-y-1.5 shadow-2xs hover:shadow-xs transition-shadow">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 flex items-center justify-center shrink-0">
+                  <Brain className="w-4 h-4" />
+                </div>
+                <h3 className="font-delight text-sm font-bold text-foreground">Tripartite Aptitude</h3>
+              </div>
+              <p className="font-delight text-xs text-muted-foreground leading-relaxed text-left sm:text-justify pt-1">
+                Evaluates Verbal logic, Numerical reasoning, and Spatial 3D visualization through balanced, calibrated problem sets.
               </p>
             </div>
 
-            <div className="rounded-xl border border-border bg-card p-3.5 space-y-1.5 text-left">
-              <h3 className="text-xs font-bold text-foreground">Psychometric Stream Fit</h3>
-              <p className="text-2xs text-muted-foreground text-left sm:text-justify leading-relaxed">
-                Applies the Holland RIASEC vocational model to map student interests against academic streams including Science PCM, Science PCB, Commerce, and Humanities.
+            <div className="rounded-xl border border-border bg-card/80 p-4 space-y-1.5 shadow-2xs hover:shadow-xs transition-shadow">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 flex items-center justify-center shrink-0">
+                  <Compass className="w-4 h-4" />
+                </div>
+                <h3 className="font-delight text-sm font-bold text-foreground">RIASEC Stream Fit</h3>
+              </div>
+              <p className="font-delight text-xs text-muted-foreground leading-relaxed text-left sm:text-justify pt-1">
+                Maps authentic personal interests against Science (PCM/PCB), Commerce, and Humanities career trajectories.
               </p>
             </div>
 
-            <div className="rounded-xl border border-border bg-card p-3.5 space-y-1.5 text-left">
-              <h3 className="text-xs font-bold text-foreground">Gaussian National Norms</h3>
-              <p className="text-2xs text-muted-foreground text-left sm:text-justify leading-relaxed">
-                Dynamic session randomization guarantees unique question sequences, with candidate results benchmarked against continuous national percentile cohorts.
+            <div className="rounded-xl border border-border bg-card/80 p-4 space-y-1.5 shadow-2xs hover:shadow-xs transition-shadow">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 flex items-center justify-center shrink-0">
+                  <BarChart3 className="w-4 h-4" />
+                </div>
+                <h3 className="font-delight text-sm font-bold text-foreground">National Norms</h3>
+              </div>
+              <p className="font-delight text-xs text-muted-foreground leading-relaxed text-left sm:text-justify pt-1">
+                Every session is uniquely randomised, benchmarking candidate scores against continuous national percentile cohorts.
               </p>
             </div>
 
-            <div className="rounded-xl border border-border bg-card p-3.5 space-y-1.5 text-left">
-              <h3 className="text-xs font-bold text-foreground">Seven Day Free Trial</h3>
-              <p className="text-2xs text-muted-foreground text-left sm:text-justify leading-relaxed">
-                New candidate registrations include seven days of full access to all diagnostic batteries and percentile rankings before chapterwise question bank upgrades.
+            <div className="rounded-xl border border-border bg-card/80 p-4 space-y-1.5 shadow-2xs hover:shadow-xs transition-shadow">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-violet-100 text-violet-700 dark:bg-violet-950/60 dark:text-violet-300 flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <h3 className="font-delight text-sm font-bold text-foreground">7-Day Free Trial</h3>
+              </div>
+              <p className="font-delight text-xs text-muted-foreground leading-relaxed text-left sm:text-justify pt-1">
+                Includes full access to the diagnostic battery and detailed stream analysis, with chapterwise question banks for ₹899.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      <main className="flex-1 flex items-center justify-center p-6">
-        <div className="w-full max-w-2xl space-y-7">
-          <div className="text-left space-y-3">
-            <img
-              src={LOGO_URL}
-              alt="LearnReady"
-              className="object-contain cursor-pointer select-none transition-transform active:scale-95"
-              style={{ height: '76px', width: 'auto' }}
-              onClick={handleLogoClick}
-              title="LearnReady"
-            />
-            <h2 className="text-3xl font-bold text-foreground tracking-tight text-left">Aptitude & Interest Battery</h2>
-            <p className="text-muted-foreground text-left sm:text-justify leading-relaxed">
-              A nationally benchmarked diagnostic assessment for Class 9 to 12 students. Each session is uniquely randomised. No two tests are identical.
+      {/* Begin Assessment Section */}
+      <section id="begin-assessment" className="flex-1 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-2xl mx-auto space-y-7">
+          {/* Section Header */}
+          <div className="text-left space-y-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-primary">Candidate Registration</span>
+            <h2 className="font-delight text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+              Begin Your Diagnostic Assessment
+            </h2>
+            <p className="text-sm text-muted-foreground text-left sm:text-justify leading-relaxed">
+              Complete your candidate details below to configure your uniquely randomised diagnostic battery. Each session is benchmarked against Indian secondary educational cohorts.
             </p>
           </div>
 
+          {/* Battery Sections Info */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             {SECTIONS_INFO.map(s => (
               <div key={s.label} className={`rounded-lg border p-3 ${s.cls}`}>
                 <p className="font-semibold text-sm text-left">{s.label}</p>
-                <p className="text-xs opacity-80 mt-0.5 text-left text-justify">{s.desc}</p>
+                <p className="text-xs opacity-85 mt-0.5 text-left text-justify">{s.desc}</p>
               </div>
             ))}
           </div>
 
+          {/* Session Timing Meta */}
           <div className="flex items-center justify-start gap-6 text-sm text-muted-foreground flex-wrap">
             <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-primary" />{displayTime}</span>
             <span className="flex items-center gap-1.5"><BarChart3 className="w-4 h-4 text-primary" />{displayQuestions}</span>
-            <span className="flex items-center gap-1.5"><Brain className="w-4 h-4 text-primary" />Unique randomisation</span>
+            <span className="flex items-center gap-1.5"><Brain className="w-4 h-4 text-primary" />Unique Randomisation</span>
           </div>
 
-          {/* 7-Day Free Trial / Pro Membership Dashboard Banner */}
+          {/* 7-Day Free Trial / Pro Membership Dashboard Banner (When Signed In) */}
           {user && (
             <div className="rounded-xl border border-border bg-card p-4 shadow-sm text-left space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border/60 pb-3">
@@ -351,7 +439,7 @@ export default function LandingPage() {
                         {user.isPaidPro ? 'Pro Membership Active' : '7-Day Free Candidate Trial'}
                       </h3>
                       {user.isPaidPro ? (
-                        <Badge className="bg-emerald-600 text-white text-2xs">Unlimited</Badge>
+                        <Badge className="bg-emerald-600 text-white text-2xs">Lifetime Access</Badge>
                       ) : (
                         <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-300 text-2xs">
                           {trialTimeLeft?.isExpired ? 'Trial Expired' : 'Active'}
@@ -361,7 +449,7 @@ export default function LandingPage() {
                     <p className="text-2xs text-muted-foreground mt-0.5">
                       {user.isPaidPro
                         ? 'Full access to all diagnostic batteries and chapterwise question banks.'
-                        : 'Unrestricted access to all diagnostic batteries, AI profiling & national percentiles.'}
+                        : 'Unrestricted access to all diagnostic batteries, percentile scoring, and stream fit analysis.'}
                     </p>
                   </div>
                 </div>
@@ -406,24 +494,25 @@ export default function LandingPage() {
             </div>
           )}
 
-          <Card className="shadow-sm">
+          {/* Form Card */}
+          <Card className="shadow-sm border-border">
             <CardContent className="pt-6 space-y-4">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label htmlFor="name">Full Name</Label>
+                  <Label htmlFor="name">Full Name <span className="text-destructive">*</span></Label>
                   <Input id="name" placeholder="e.g. Arjun Sharma" value={form.name} onChange={e => setField('name', e.target.value)} />
                   {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="age">Age</Label>
+                  <Label htmlFor="age">Age <span className="text-destructive">*</span></Label>
                   <Input id="age" type="number" placeholder="e.g. 15" min={12} max={25} value={form.age} onChange={e => setField('age', e.target.value)} />
                   {errors.age && <p className="text-xs text-destructive">{errors.age}</p>}
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label>Region</Label>
+                  <Label>Region <span className="text-destructive">*</span></Label>
                   <Select value={form.region} onValueChange={v => setField('region', v)}>
                     <SelectTrigger><SelectValue placeholder="Select region" /></SelectTrigger>
                     <SelectContent>{REGIONS.map(r => <SelectItem key={r} value={r}>{r}</SelectItem>)}</SelectContent>
@@ -431,7 +520,7 @@ export default function LandingPage() {
                   {errors.region && <p className="text-xs text-destructive">{errors.region}</p>}
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Class / Level</Label>
+                  <Label>Class / Level <span className="text-destructive">*</span></Label>
                   <Select value={form.educationLevel} onValueChange={v => setField('educationLevel', v)}>
                     <SelectTrigger><SelectValue placeholder="Select class" /></SelectTrigger>
                     <SelectContent>{EDUCATION_LEVELS.map(e => <SelectItem key={e} value={e}>{e}</SelectItem>)}</SelectContent>
@@ -445,9 +534,9 @@ export default function LandingPage() {
                 <div className="space-y-2">
                   <Label className="flex items-center gap-1.5">
                     Assessment Format
-                    <Badge variant="outline" className="text-xs font-normal border-primary/30 text-primary bg-primary/5 ml-1">Class 9 & 10</Badge>
+                    <Badge variant="outline" className="text-xs font-normal border-primary/30 text-primary bg-primary/5 ml-1">Class 9 and 10</Badge>
                   </Label>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {MODES.map(m => {
                       const Icon = m.icon;
                       const selected = testMode === m.id;
@@ -487,7 +576,7 @@ export default function LandingPage() {
                 </div>
               )}
 
-              {/* Board selection */}
+              {/* Board Selection */}
               <div className="space-y-1.5">
                 <Label className="flex items-center gap-1.5">
                   <GraduationCap className="w-3.5 h-3.5 text-primary" />
@@ -506,26 +595,26 @@ export default function LandingPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label htmlFor="candidateId">Roll No. / Candidate ID</Label>
+                  <Label htmlFor="candidateId">Roll No. / Candidate ID <span className="text-destructive">*</span></Label>
                   <Input id="candidateId" placeholder="e.g. 23CBSE001" value={form.candidateId} onChange={e => setField('candidateId', e.target.value)} />
                   {errors.candidateId && <p className="text-xs text-destructive">{errors.candidateId}</p>}
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="phone">Mobile Number</Label>
+                  <Label htmlFor="phone">Mobile Number <span className="text-destructive">*</span></Label>
                   <Input id="phone" type="tel" placeholder="e.g. 9876543210" value={form.phone} onChange={e => setField('phone', e.target.value)} />
                   {errors.phone && <p className="text-xs text-destructive">{errors.phone}</p>}
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="email">Email Address <span className="text-destructive">*</span></Label>
                 <Input id="email" type="email" placeholder="you@example.com" value={form.email} onChange={e => setField('email', e.target.value)} />
                 {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
               </div>
 
               {hasExistingExam ? (
-                <div className="flex gap-2 pt-1">
-                  <Button className="flex-1" onClick={() => {
+                <div className="flex gap-2 pt-2">
+                  <Button className="flex-1 cursor-pointer font-bold text-base h-11" onClick={() => {
                     if (!user) {
                       setShowAuthPrompt(true);
                       return;
@@ -534,35 +623,39 @@ export default function LandingPage() {
                   }}>
                     <ArrowRight className="w-4 h-4 mr-2" />Resume Assessment
                   </Button>
-                  <Button variant="outline" onClick={() => resetExam()}><RotateCcw className="w-4 h-4 mr-1" />Restart</Button>
+                  <Button variant="outline" className="cursor-pointer h-11" onClick={() => resetExam()}>
+                    <RotateCcw className="w-4 h-4 mr-1" />Restart
+                  </Button>
                 </div>
               ) : (
-                <Button className="w-full cursor-pointer" size="lg" onClick={handleStart}>
+                <Button className="w-full cursor-pointer font-bold text-base h-12 shadow-sm" size="lg" onClick={handleStart}>
                   Begin Assessment <ArrowRight className="ml-2 w-4 h-4" />
                 </Button>
               )}
             </CardContent>
           </Card>
+
           <p className="text-left text-xs text-muted-foreground text-justify">
-            Each session generates a unique question set from our 140+ question bank. Progress saved automatically.
+            Each diagnostic assessment generates a unique question set from our calibrated national question bank. Session progress is stored locally in real-time.
           </p>
         </div>
-      </main>
+      </section>
 
+      {/* Auth Prompt Alert Modal */}
       <AlertDialog open={showAuthPrompt} onOpenChange={setShowAuthPrompt}>
         <AlertDialogContent className="sm:max-w-md">
           <AlertDialogHeader className="text-center sm:text-center space-y-2">
             <div className="w-12 h-12 rounded-full bg-primary/10 text-primary mx-auto flex items-center justify-center mb-1">
               <UserCheck className="w-6 h-6" />
             </div>
-            <AlertDialogTitle className="text-xl font-bold">Sign In or Register Required</AlertDialogTitle>
-            <AlertDialogDescription className="text-sm text-muted-foreground">
+            <AlertDialogTitle className="font-delight text-xl font-bold">Sign In or Register Required</AlertDialogTitle>
+            <AlertDialogDescription className="text-sm text-muted-foreground text-justify sm:text-left">
               No active student account was detected. Please sign in or register to record your diagnostic answers, benchmark your national percentile, and access your personalized stream recommendations.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="flex flex-col gap-2.5 pt-3">
             <Button
-              className="w-full flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 cursor-pointer font-semibold"
               size="lg"
               onClick={() => {
                 setShowAuthPrompt(false);
@@ -575,7 +668,7 @@ export default function LandingPage() {
             </Button>
             <Button
               variant="outline"
-              className="w-full flex items-center justify-center gap-2 border-primary/30 text-primary hover:bg-primary/5 cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 border-primary/30 text-primary hover:bg-primary/5 cursor-pointer font-semibold"
               size="lg"
               onClick={() => {
                 setShowAuthPrompt(false);
@@ -591,18 +684,19 @@ export default function LandingPage() {
               className="w-full text-xs text-muted-foreground hover:text-foreground mt-1 cursor-pointer"
               onClick={() => setShowAuthPrompt(false)}
             >
-              Cancel & Stay on Overview
+              Cancel and Stay on Overview
             </Button>
           </div>
         </AlertDialogContent>
       </AlertDialog>
 
+      {/* Existing Exam Confirmation Modal */}
       <AlertDialog open={showResumeDialog} onOpenChange={setShowResumeDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Start a new assessment?</AlertDialogTitle>
+            <AlertDialogTitle className="font-delight font-bold">Start a new assessment?</AlertDialogTitle>
             <AlertDialogDescription>
-              You have an assessment in progress. Starting fresh will erase your progress and generate a new unique question set.
+              You have an assessment in progress. Starting fresh will erase your current progress and generate a new unique question set.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -116,6 +116,9 @@
     text-align: justify;
     text-justify: inter-word;
   }
+  .font-delight {
+    font-family: 'delight', 'Plus Jakarta Sans', var(--font-sans);
+  }
 }
 
 /* ── Print / PDF Export Styles ── */
