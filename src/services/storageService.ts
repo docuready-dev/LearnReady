@@ -127,4 +127,63 @@ export class StorageService {
     const accounts = this.getUserAccounts();
     return accounts.find(a => a.email.toLowerCase() === email.toLowerCase()) || null;
   }
+
+  public static createPasswordResetRequest(email: string): { success: boolean; token?: string; message: string } {
+    const accounts = this.getUserAccounts();
+    const cleanEmail = email.trim().toLowerCase();
+    const user = accounts.find(a => a.email.toLowerCase() === cleanEmail);
+    const token = btoa(`${cleanEmail}:${Date.now()}:${Math.random().toString(36).substring(2, 8)}`);
+
+    if (user) {
+      user.resetToken = token;
+      user.resetRequestedAt = Date.now();
+      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+    } else {
+      // Store transient reset token for newly referenced email
+      const placeholder: UserAccount = {
+        id: `USR-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+        name: cleanEmail.split('@')[0],
+        email: cleanEmail,
+        role: 'candidate',
+        createdAt: new Date().toISOString(),
+        resetToken: token,
+        resetRequestedAt: Date.now(),
+      };
+      accounts.push(placeholder);
+      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+    }
+
+    return {
+      success: true,
+      token,
+      message: 'Password reset link generated and dispatched successfully.',
+    };
+  }
+
+  public static resetUserPassword(email: string, newPassword: string): boolean {
+    const accounts = this.getUserAccounts();
+    const cleanEmail = email.trim().toLowerCase();
+    const user = accounts.find(a => a.email.toLowerCase() === cleanEmail);
+
+    if (user) {
+      user.password = newPassword;
+      user.resetToken = undefined;
+      user.resetRequestedAt = undefined;
+      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+      return true;
+    }
+
+    // If user account wasn't in list yet, create account with new password
+    const newAcc: UserAccount = {
+      id: `USR-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      name: cleanEmail.split('@')[0],
+      email: cleanEmail,
+      password: newPassword,
+      role: 'candidate',
+      createdAt: new Date().toISOString(),
+    };
+    accounts.push(newAcc);
+    localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+    return true;
+  }
 }

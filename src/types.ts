@@ -91,6 +91,9 @@ export interface UserAccount {
   name: string;
   email: string;
   phone?: string;
+  password?: string;
+  resetToken?: string;
+  resetRequestedAt?: number;
   role: 'candidate' | 'admin';
   grade?: string;
   board?: string;

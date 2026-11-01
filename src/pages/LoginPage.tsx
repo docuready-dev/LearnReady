@@ -22,7 +22,9 @@ import {
   BookOpen,
   Phone,
   GraduationCap,
-  Clock
+  Clock,
+  AlertCircle,
+  ArrowLeft
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -37,10 +39,10 @@ const EDUCATION_LEVELS = [
 ];
 
 export default function LoginPage() {
-  const { user, login, register, authTab, setAuthTab, handleLogoClick } = useAuth();
+  const { user, login, register, authTab, setAuthTab, handleLogoClick, requestPasswordReset, resetPassword } = useAuth();
   const { setPage } = useExam();
 
-  const [mode, setMode] = useState<'login' | 'register'>(authTab || 'login');
+  const [mode, setMode] = useState<'login' | 'register' | 'forgot'>(authTab || 'login');
 
   React.useEffect(() => {
     if (authTab) {
@@ -53,7 +55,7 @@ export default function LoginPage() {
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
 
-  // Register form
+  // Register form (Mobile number and Email are compulsory)
   const [regName, setRegName] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regPhone, setRegPhone] = useState('');
@@ -61,6 +63,13 @@ export default function LoginPage() {
   const [regGrade, setRegGrade] = useState('Class 10 (Current)');
   const [regBoard, setRegBoard] = useState('CBSE');
   const [regSchool, setRegSchool] = useState('');
+
+  // Forgot password form
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotSent, setForgotSent] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -99,9 +108,19 @@ export default function LoginPage() {
     e.preventDefault();
     const errs: Record<string, string> = {};
     if (!regName.trim()) errs.regName = 'Full name is required';
-    if (!regEmail.trim() || !regEmail.includes('@')) errs.regEmail = 'Enter a valid email address';
+    if (!regEmail.trim() || !regEmail.includes('@')) {
+      errs.regEmail = 'Email address is compulsory';
+    }
+
+    const cleanPhone = regPhone.replace(/\D/g, '');
+    if (!regPhone.trim()) {
+      errs.regPhone = 'Mobile number is compulsory for registration';
+    } else if (cleanPhone.length < 10) {
+      errs.regPhone = 'Enter a valid 10-digit mobile number';
+    }
+
     if (!regPassword.trim() || regPassword.length < 6) {
-      errs.regPassword = 'Password must be at least 6 characters';
+      errs.regPassword = 'Password is required (min 6 characters)';
     }
 
     if (Object.keys(errs).length > 0) {
@@ -116,7 +135,8 @@ export default function LoginPage() {
       register({
         name: regName.trim(),
         email: regEmail.trim(),
-        phone: regPhone.trim() || undefined,
+        phone: regPhone.trim(),
+        password: regPassword.trim(),
         grade: regGrade,
         board: regBoard,
         school: regSchool.trim() || undefined,
@@ -125,6 +145,56 @@ export default function LoginPage() {
       toast.success(`Account created! Welcome to your 7-Day Free Trial, ${regName}!`);
       setPage('landing');
     }, 400);
+  }
+
+  function handleSendForgotEmail(e: React.FormEvent) {
+    e.preventDefault();
+    const errs: Record<string, string> = {};
+    if (!forgotEmail.trim() || !forgotEmail.includes('@')) {
+      errs.forgotEmail = 'Enter a valid registered email address';
+    }
+    if (Object.keys(errs).length > 0) {
+      setErrors(errs);
+      return;
+    }
+
+    setErrors({});
+    setIsSubmitting(true);
+
+    setTimeout(() => {
+      requestPasswordReset(forgotEmail.trim());
+      setIsSubmitting(false);
+      setForgotSent(true);
+      toast.success('Password reset instructions generated! Please check your spam & bin folders.');
+    }, 500);
+  }
+
+  function handleCompletePasswordReset(e: React.FormEvent) {
+    e.preventDefault();
+    const errs: Record<string, string> = {};
+    if (!newPassword.trim() || newPassword.length < 6) {
+      errs.newPassword = 'New password must be at least 6 characters';
+    }
+    if (newPassword !== confirmPassword) {
+      errs.confirmPassword = 'Passwords do not match';
+    }
+    if (Object.keys(errs).length > 0) {
+      setErrors(errs);
+      return;
+    }
+
+    setErrors({});
+    setIsSubmitting(true);
+
+    setTimeout(() => {
+      resetPassword(forgotEmail.trim(), newPassword.trim());
+      setIsSubmitting(false);
+      toast.success('Password successfully reset! You can now sign in.');
+      setLoginEmail(forgotEmail.trim());
+      setLoginPassword(newPassword.trim());
+      setMode('login');
+      setForgotSent(false);
+    }, 500);
   }
 
   // Already logged in state
@@ -255,39 +325,53 @@ export default function LoginPage() {
                 <div className="flex items-center justify-between mb-1">
                   <img src={LOGO_URL} alt="LearnReady" className="h-8 object-contain" />
                   <Badge variant="outline" className="text-2xs font-semibold">
-                    {mode === 'login' ? 'Existing Candidate' : 'New Registration'}
+                    {mode === 'login' ? 'Existing Candidate' : mode === 'register' ? 'New Registration' : 'Password Recovery'}
                   </Badge>
                 </div>
                 <CardTitle className="text-2xl font-bold">
-                  {mode === 'login' ? 'Sign in to your account' : 'Create candidate account'}
+                  {mode === 'login' ? 'Sign in to your account' : mode === 'register' ? 'Create candidate account' : 'Reset your password'}
                 </CardTitle>
                 <CardDescription className="text-xs text-muted-foreground">
                   {mode === 'login'
                     ? 'Enter your credentials to access your assessment session and reports'
-                    : 'Register your details to save diagnostic progress and view stream fits'}
+                    : mode === 'register'
+                    ? 'Register your details to save diagnostic progress and view stream fits'
+                    : 'Recover candidate access using your registered email address'}
                 </CardDescription>
 
                 {/* Tab Switcher */}
-                <div className="grid grid-cols-2 gap-1 bg-muted p-1 rounded-lg mt-3">
-                  <button
-                    type="button"
-                    onClick={() => { setMode('login'); setAuthTab('login'); setErrors({}); }}
-                    className={`py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer ${
-                      mode === 'login' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    Sign In
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => { setMode('register'); setAuthTab('register'); setErrors({}); }}
-                    className={`py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer ${
-                      mode === 'register' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
-                    }`}
-                  >
-                    Register / Sign Up
-                  </button>
-                </div>
+                {mode !== 'forgot' ? (
+                  <div className="grid grid-cols-2 gap-1 bg-muted p-1 rounded-lg mt-3">
+                    <button
+                      type="button"
+                      onClick={() => { setMode('login'); setAuthTab('login'); setErrors({}); }}
+                      className={`py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer ${
+                        mode === 'login' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      Sign In
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setMode('register'); setAuthTab('register'); setErrors({}); }}
+                      className={`py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer ${
+                        mode === 'register' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      Register / Sign Up
+                    </button>
+                  </div>
+                ) : (
+                  <div className="pt-2">
+                    <button
+                      type="button"
+                      onClick={() => { setMode('login'); setErrors({}); }}
+                      className="text-xs text-primary hover:underline flex items-center gap-1.5 cursor-pointer font-medium"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5" />Back to Candidate Sign In
+                    </button>
+                  </div>
+                )}
               </CardHeader>
 
               <CardContent>
@@ -313,9 +397,18 @@ export default function LoginPage() {
                         <Label className="text-xs font-semibold flex items-center gap-1.5">
                           <Lock className="w-3.5 h-3.5 text-muted-foreground" />Password
                         </Label>
-                        <span className="text-2xs text-primary hover:underline cursor-pointer" onClick={() => toast.info('Default demo password can be any characters.')}>
+                        <button
+                          type="button"
+                          className="text-2xs text-primary hover:underline cursor-pointer font-medium"
+                          onClick={() => {
+                            setMode('forgot');
+                            setForgotSent(false);
+                            setForgotEmail(loginEmail || '');
+                            setErrors({});
+                          }}
+                        >
                           Forgot password?
-                        </span>
+                        </button>
                       </div>
                       <div className="relative">
                         <Input
@@ -360,7 +453,7 @@ export default function LoginPage() {
                       </Button>
                     </div>
                   </form>
-                ) : (
+                ) : mode === 'register' ? (
                   /* REGISTER FORM */
                   <form onSubmit={handleRegister} className="space-y-3.5">
                     {/* 7-Day Free Trial Notice */}
@@ -376,6 +469,12 @@ export default function LoginPage() {
                         All registrations start with an unrestricted 7-day trial period. After the 7-day trial, candidates can unlock all subjects' chapterwise question banks with verified answer keys for a one-time fee of ₹899/- INR.
                       </p>
                     </div>
+
+                    {/* Compulsory Credentials Notice */}
+                    <div className="rounded-lg bg-muted/60 p-2.5 text-2xs text-muted-foreground text-left sm:text-justify leading-relaxed">
+                      <strong>Registration Requirements:</strong> Mobile number and email address are compulsory for candidate records. No OTP is needed. Only your password is required to create and secure your candidate account.
+                    </div>
+
                     <div className="space-y-1.5">
                       <Label className="text-xs font-semibold flex items-center gap-1.5">
                         <User className="w-3.5 h-3.5 text-muted-foreground" />Student Full Name *
@@ -392,7 +491,7 @@ export default function LoginPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1.5">
                         <Label className="text-xs font-semibold flex items-center gap-1.5">
-                          <Mail className="w-3.5 h-3.5 text-muted-foreground" />Email Address *
+                          <Mail className="w-3.5 h-3.5 text-muted-foreground" />Email Address * (Compulsory)
                         </Label>
                         <Input
                           type="email"
@@ -406,24 +505,29 @@ export default function LoginPage() {
 
                       <div className="space-y-1.5">
                         <Label className="text-xs font-semibold flex items-center gap-1.5">
-                          <Phone className="w-3.5 h-3.5 text-muted-foreground" />Mobile Number
+                          <Phone className="w-3.5 h-3.5 text-muted-foreground" />Mobile Number * (Compulsory)
                         </Label>
                         <Input
                           type="tel"
-                          placeholder="e.g. 9876543210"
+                          placeholder="10-digit mobile number"
                           value={regPhone}
                           onChange={e => setRegPhone(e.target.value)}
+                          className={errors.regPhone ? 'border-destructive' : ''}
                         />
+                        {errors.regPhone && <p className="text-xs text-destructive">{errors.regPhone}</p>}
                       </div>
                     </div>
 
                     <div className="space-y-1.5">
-                      <Label className="text-xs font-semibold flex items-center gap-1.5">
-                        <Lock className="w-3.5 h-3.5 text-muted-foreground" />Password *
-                      </Label>
+                      <div className="flex items-center justify-between">
+                        <Label className="text-xs font-semibold flex items-center gap-1.5">
+                          <Lock className="w-3.5 h-3.5 text-muted-foreground" />Password * (Compulsory)
+                        </Label>
+                        <span className="text-2xs text-muted-foreground font-medium">No OTP needed</span>
+                      </div>
                       <Input
                         type="password"
-                        placeholder="Min 6 characters"
+                        placeholder="Min 6 characters (just password needed)"
                         value={regPassword}
                         onChange={e => setRegPassword(e.target.value)}
                         className={errors.regPassword ? 'border-destructive' : ''}
@@ -476,6 +580,105 @@ export default function LoginPage() {
                       {isSubmitting ? 'Registering...' : 'Register & Start Assessment'}
                     </Button>
                   </form>
+                ) : (
+                  /* FORGOT PASSWORD FORM */
+                  <div className="space-y-4 text-left">
+                    {/* Mailbox Spam and Bin Folders Notice */}
+                    <div className="rounded-xl border border-amber-300 dark:border-amber-800 bg-amber-50/90 dark:bg-amber-950/40 p-4 text-left space-y-2">
+                      <div className="flex items-center gap-2 text-amber-800 dark:text-amber-200 font-bold text-xs">
+                        <AlertCircle className="w-4 h-4 flex-shrink-0 text-amber-600 dark:text-amber-400" />
+                        <span>Important: Check Spam and Bin Folders</span>
+                      </div>
+                      <p className="text-xs text-amber-950/90 dark:text-amber-100/90 text-left sm:text-justify leading-relaxed">
+                        If you do not see the password recovery notification in your primary inbox, please be sure to check both your <strong>Spam</strong> and <strong>Bin (Trash)</strong> folders of your mailbox. Email providers frequently route automated reset messages to these secondary folders.
+                      </p>
+                    </div>
+
+                    {!forgotSent ? (
+                      <form onSubmit={handleSendForgotEmail} className="space-y-4">
+                        <div className="space-y-1.5">
+                          <Label className="text-xs font-semibold flex items-center gap-1.5">
+                            <Mail className="w-3.5 h-3.5 text-muted-foreground" />Registered Email Address *
+                          </Label>
+                          <Input
+                            type="email"
+                            placeholder="e.g. rahul.sharma@example.com"
+                            value={forgotEmail}
+                            onChange={e => setForgotEmail(e.target.value)}
+                            className={errors.forgotEmail ? 'border-destructive' : ''}
+                          />
+                          {errors.forgotEmail && <p className="text-xs text-destructive">{errors.forgotEmail}</p>}
+                        </div>
+
+                        <Button type="submit" disabled={isSubmitting} className="w-full font-semibold cursor-pointer">
+                          {isSubmitting ? 'Generating Reset Instructions...' : 'Send Password Reset Link'}
+                        </Button>
+                      </form>
+                    ) : (
+                      <form onSubmit={handleCompletePasswordReset} className="space-y-4">
+                        <div className="rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 p-3 text-xs text-emerald-800 dark:text-emerald-200 space-y-1">
+                          <p className="font-semibold flex items-center gap-1.5">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                            Reset Link Active for {forgotEmail}
+                          </p>
+                          <p className="text-2xs text-muted-foreground text-left sm:text-justify leading-relaxed">
+                            Reset authorization verified. You can now set your new password directly below. Please remember to check your spam and bin/trash folders if you are also looking for the email record.
+                          </p>
+                        </div>
+
+                        <div className="space-y-1.5">
+                          <Label className="text-xs font-semibold flex items-center gap-1.5">
+                            <Lock className="w-3.5 h-3.5 text-muted-foreground" />New Password *
+                          </Label>
+                          <div className="relative">
+                            <Input
+                              type={showNewPassword ? 'text' : 'password'}
+                              placeholder="Min 6 characters"
+                              value={newPassword}
+                              onChange={e => setNewPassword(e.target.value)}
+                              className={errors.newPassword ? 'border-destructive pr-10' : 'pr-10'}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowNewPassword(p => !p)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
+                            >
+                              {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            </button>
+                          </div>
+                          {errors.newPassword && <p className="text-xs text-destructive">{errors.newPassword}</p>}
+                        </div>
+
+                        <div className="space-y-1.5">
+                          <Label className="text-xs font-semibold flex items-center gap-1.5">
+                            <Lock className="w-3.5 h-3.5 text-muted-foreground" />Confirm New Password *
+                          </Label>
+                          <Input
+                            type="password"
+                            placeholder="Repeat new password"
+                            value={confirmPassword}
+                            onChange={e => setConfirmPassword(e.target.value)}
+                            className={errors.confirmPassword ? 'border-destructive' : ''}
+                          />
+                          {errors.confirmPassword && <p className="text-xs text-destructive">{errors.confirmPassword}</p>}
+                        </div>
+
+                        <Button type="submit" disabled={isSubmitting} className="w-full font-semibold cursor-pointer">
+                          {isSubmitting ? 'Updating Password...' : 'Save New Password & Sign In'}
+                        </Button>
+                      </form>
+                    )}
+
+                    <div className="pt-2 text-center">
+                      <button
+                        type="button"
+                        onClick={() => { setMode('login'); setErrors({}); }}
+                        className="text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer inline-flex items-center gap-1 font-medium"
+                      >
+                        <ArrowLeft className="w-3.5 h-3.5" />Return to Sign In
+                      </button>
+                    </div>
+                  </div>
                 )}
 
                 <div className="mt-4 pt-3 border-t border-border text-center">

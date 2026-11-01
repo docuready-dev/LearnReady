@@ -256,6 +256,53 @@ export default function LandingPage() {
         </div>
       </header>
 
+      {/* Small Hero Section fitting the whole screen (No double hyphens, no icons) */}
+      <section className="w-full border-b border-border bg-card/50 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto space-y-4 text-left">
+          <div className="space-y-1.5">
+            <span className="text-2xs font-bold uppercase tracking-wider text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-md inline-block">
+              National Secondary Academic Diagnostic
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight text-left">
+              Standardized Cognitive Diagnostic and Stream Decision Architecture
+            </h1>
+            <p className="text-xs sm:text-sm text-muted-foreground text-left sm:text-justify leading-relaxed max-w-4xl">
+              LearnReady is designed for secondary and senior secondary students across Indian educational boards including CBSE, ICSE, and State Boards for the 2026 to 2027 academic session. This platform provides an empirical and psychometrically calibrated assessment system to guide academic stream selection and career orientation.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-left pt-1">
+            <div className="rounded-xl border border-border bg-card p-3.5 space-y-1.5 text-left">
+              <h3 className="text-xs font-bold text-foreground">Tripartite Core Aptitude</h3>
+              <p className="text-2xs text-muted-foreground text-left sm:text-justify leading-relaxed">
+                Evaluates Verbal Reasoning for comprehension and logic, Numerical Reasoning for data interpretation, and Spatial Visualization for geometric patterns.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-border bg-card p-3.5 space-y-1.5 text-left">
+              <h3 className="text-xs font-bold text-foreground">Psychometric Stream Fit</h3>
+              <p className="text-2xs text-muted-foreground text-left sm:text-justify leading-relaxed">
+                Applies the Holland RIASEC vocational model to map student interests against academic streams including Science PCM, Science PCB, Commerce, and Humanities.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-border bg-card p-3.5 space-y-1.5 text-left">
+              <h3 className="text-xs font-bold text-foreground">Gaussian National Norms</h3>
+              <p className="text-2xs text-muted-foreground text-left sm:text-justify leading-relaxed">
+                Dynamic session randomization guarantees unique question sequences, with candidate results benchmarked against continuous national percentile cohorts.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-border bg-card p-3.5 space-y-1.5 text-left">
+              <h3 className="text-xs font-bold text-foreground">Seven Day Free Trial</h3>
+              <p className="text-2xs text-muted-foreground text-left sm:text-justify leading-relaxed">
+                New candidate registrations include seven days of full access to all diagnostic batteries and percentile rankings before chapterwise question bank upgrades.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <main className="flex-1 flex items-center justify-center p-6">
         <div className="w-full max-w-2xl space-y-7">
           <div className="text-left space-y-3">

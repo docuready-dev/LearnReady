@@ -28,7 +28,9 @@ interface AuthContextValue {
   sendAdminMagicLink: (email: string) => { success: boolean; message: string; magicUrl?: string; token?: string };
   verifyMagicToken: (token: string, email: string) => boolean;
   login: (email: string, name?: string) => void;
-  register: (data: { name: string; email: string; phone?: string; grade?: string; board?: string; school?: string }) => void;
+  register: (data: { name: string; email: string; phone: string; password?: string; grade?: string; board?: string; school?: string }) => void;
+  requestPasswordReset: (email: string) => { success: boolean; message: string };
+  resetPassword: (email: string, newPass: string) => boolean;
   updateProfile: (data: { name?: string; grade?: string; board?: string; school?: string }) => void;
   upgradeToPro: () => void;
   loginWithRedirect: (customEmail?: string) => void;
@@ -86,7 +88,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(sessionUser);
   };
 
-  const register = (data: { name: string; email: string; phone?: string; grade?: string; board?: string; school?: string }) => {
+  const register = (data: { name: string; email: string; phone: string; password?: string; grade?: string; board?: string; school?: string }) => {
     const isTargetAdmin = data.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
     const now = Date.now();
     const registeredAt = now;
@@ -96,6 +98,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       name: data.name,
       email: data.email,
       phone: data.phone,
+      password: data.password,
       role: isTargetAdmin ? 'admin' : 'candidate',
       grade: data.grade,
       board: data.board,
@@ -120,6 +123,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(sessionUser));
     setUser(sessionUser);
+  };
+
+  const requestPasswordReset = (email: string) => {
+    return StorageService.createPasswordResetRequest(email);
+  };
+
+  const resetPassword = (email: string, newPass: string) => {
+    return StorageService.resetUserPassword(email, newPass);
   };
 
   const updateProfile = (data: { name?: string; grade?: string; board?: string; school?: string }) => {
@@ -259,6 +270,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         verifyMagicToken,
         login,
         register,
+        requestPasswordReset,
+        resetPassword,
         updateProfile,
         upgradeToPro,
         loginWithRedirect,
