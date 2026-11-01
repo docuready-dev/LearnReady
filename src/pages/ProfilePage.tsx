@@ -4,7 +4,7 @@ import { useExam } from '../context/ExamContext';
 import { getResults } from '../api/results';
 import { ExamResultRecord } from '../types';
 import { INDIAN_BOARDS } from '../data/boards';
-import { QUESTION_BANKS_CATALOG } from '../data/questionBanks';
+import { StorageService } from '../services/storageService';
 import PaymentModal from '../components/PaymentModal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -128,9 +128,11 @@ export default function ProfilePage() {
     }, 350);
   }
 
+  const allQuestionBanks = useMemo(() => StorageService.getQuestionBanks(), []);
+
   const currentSubjectBank = useMemo(() => {
-    return QUESTION_BANKS_CATALOG.find(s => s.subject === selectedSubject) || QUESTION_BANKS_CATALOG[0];
-  }, [selectedSubject]);
+    return allQuestionBanks.find(s => s.subject === selectedSubject) || allQuestionBanks[0] || { subject: 'General', classLevel: 'All', chapters: [] };
+  }, [allQuestionBanks, selectedSubject]);
 
   if (!user) {
     return (
@@ -469,7 +471,7 @@ export default function ProfilePage() {
           <CardContent className="space-y-4">
             {/* Subject Selector Tabs */}
             <div className="flex gap-2 overflow-x-auto pb-1">
-              {QUESTION_BANKS_CATALOG.map(s => (
+              {allQuestionBanks.map(s => (
                 <button
                   key={s.subject}
                   type="button"

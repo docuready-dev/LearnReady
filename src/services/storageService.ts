@@ -1,7 +1,15 @@
-import { ExamResultRecord, UserAccount } from '../types';
+import { ExamResultRecord, UserAccount, PaymentRecord } from '../types';
+import { ChapterQuestionBank, QUESTION_BANKS_CATALOG } from '../data/questionBanks';
 
 const STORAGE_KEY = 'learnready_exam_results_v1';
 const ACCOUNTS_KEY = 'learnready_user_accounts_v1';
+const PAYMENTS_KEY = 'learnready_payments_v1';
+const BANKS_KEY = 'learnready_question_banks_v1';
+const SUBJECTS_KEY = 'learnready_subjects_v1';
+const CLASSES_KEY = 'learnready_classes_v1';
+
+const DEFAULT_SUBJECTS = ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'Commerce & Accountancy', 'English Language'];
+const DEFAULT_CLASSES = ['Class 9', 'Class 10 (Current)', 'Class 11', 'Class 12', 'Undergraduate / Dropper'];
 
 export class StorageService {
   private static getRawRecords(): ExamResultRecord[] {
@@ -173,7 +181,6 @@ export class StorageService {
       return true;
     }
 
-    // If user account wasn't in list yet, create account with new password
     const newAcc: UserAccount = {
       id: `USR-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
       name: cleanEmail.split('@')[0],
@@ -185,5 +192,172 @@ export class StorageService {
     accounts.push(newAcc);
     localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
     return true;
+  }
+
+  public static updateUserAccount(id: string, updates: Partial<UserAccount>): UserAccount | null {
+    const accounts = this.getUserAccounts();
+    const idx = accounts.findIndex(a => a.id === id);
+    if (idx === -1) return null;
+    const updated = { ...accounts[idx], ...updates };
+    accounts[idx] = updated;
+    localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+    return updated;
+  }
+
+  public static deleteUserAccount(id: string): boolean {
+    const accounts = this.getUserAccounts();
+    const filtered = accounts.filter(a => a.id !== id);
+    localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(filtered));
+    return true;
+  }
+
+  public static setUserTier(idOrEmail: string, isPaidPro: boolean): boolean {
+    const accounts = this.getUserAccounts();
+    const target = accounts.find(a => a.id === idOrEmail || a.email.toLowerCase() === idOrEmail.toLowerCase());
+    if (!target) return false;
+    target.isPaidPro = isPaidPro;
+    localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accounts));
+    return true;
+  }
+
+  // ---------------------------------------------------------------------------
+  // PAYMENTS MANAGEMENT
+  // ---------------------------------------------------------------------------
+  public static getPayments(): PaymentRecord[] {
+    try {
+      const data = localStorage.getItem(PAYMENTS_KEY);
+      return data ? JSON.parse(data) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  public static recordPayment(payment: Omit<PaymentRecord, 'id' | 'date'>): PaymentRecord {
+    const payments = this.getPayments();
+    const newRecord: PaymentRecord = {
+      ...payment,
+      id: `PAY-${Date.now()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`,
+      date: new Date().toISOString(),
+    };
+    payments.unshift(newRecord);
+    localStorage.setItem(PAYMENTS_KEY, JSON.stringify(payments));
+
+    // Also auto-upgrade the user's tier to Pro
+    this.setUserTier(payment.userEmail, true);
+    return newRecord;
+  }
+
+  public static deletePayment(id: string): boolean {
+    const payments = this.getPayments();
+    const filtered = payments.filter(p => p.id !== id);
+    localStorage.setItem(PAYMENTS_KEY, JSON.stringify(filtered));
+    return true;
+  }
+
+  // ---------------------------------------------------------------------------
+  // QUESTION BANKS MANAGEMENT
+  // ---------------------------------------------------------------------------
+  public static getQuestionBanks(): ChapterQuestionBank[] {
+    try {
+      const data = localStorage.getItem(BANKS_KEY);
+      if (data) return JSON.parse(data);
+      // Seed with default catalog
+      localStorage.setItem(BANKS_KEY, JSON.stringify(QUESTION_BANKS_CATALOG));
+      return QUESTION_BANKS_CATALOG;
+    } catch {
+      return QUESTION_BANKS_CATALOG;
+    }
+  }
+
+  public static saveAllQuestionBanks(banks: ChapterQuestionBank[]): void {
+    localStorage.setItem(BANKS_KEY, JSON.stringify(banks));
+  }
+
+  public static addOrUpdateChapter(subject: string, chapter: ChapterQuestionBank['chapters'][0]): void {
+    const banks = this.getQuestionBanks();
+    let bank = banks.find(b => b.subject.toLowerCase() === subject.toLowerCase());
+    if (!bank) {
+      bank = {
+        subject,
+        classLevel: 'Class 10 to 12',
+        chapters: [],
+      };
+      banks.push(bank);
+    }
+    const existingIdx = bank.chapters.findIndex(c => c.id === chapter.id);
+    if (existingIdx >= 0) {
+      bank.chapters[existingIdx] = chapter;
+    } else {
+      bank.chapters.push(chapter);
+    }
+    this.saveAllQuestionBanks(banks);
+  }
+
+  public static deleteChapter(subject: string, chapterId: string): void {
+    const banks = this.getQuestionBanks();
+    const bank = banks.find(b => b.subject.toLowerCase() === subject.toLowerCase());
+    if (bank) {
+      bank.chapters = bank.chapters.filter(c => c.id !== chapterId);
+      this.saveAllQuestionBanks(banks);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // SUBJECTS & CLASSES MANAGEMENT
+  // ---------------------------------------------------------------------------
+  public static getSubjects(): string[] {
+    try {
+      const data = localStorage.getItem(SUBJECTS_KEY);
+      if (data) return JSON.parse(data);
+      localStorage.setItem(SUBJECTS_KEY, JSON.stringify(DEFAULT_SUBJECTS));
+      return DEFAULT_SUBJECTS;
+    } catch {
+      return DEFAULT_SUBJECTS;
+    }
+  }
+
+  public static addSubject(subject: string): string[] {
+    const clean = subject.trim();
+    if (!clean) return this.getSubjects();
+    const subjects = this.getSubjects();
+    if (!subjects.some(s => s.toLowerCase() === clean.toLowerCase())) {
+      subjects.push(clean);
+      localStorage.setItem(SUBJECTS_KEY, JSON.stringify(subjects));
+    }
+    return subjects;
+  }
+
+  public static deleteSubject(subject: string): string[] {
+    const subjects = this.getSubjects().filter(s => s.toLowerCase() !== subject.toLowerCase());
+    localStorage.setItem(SUBJECTS_KEY, JSON.stringify(subjects));
+    return subjects;
+  }
+
+  public static getClasses(): string[] {
+    try {
+      const data = localStorage.getItem(CLASSES_KEY);
+      if (data) return JSON.parse(data);
+      localStorage.setItem(CLASSES_KEY, JSON.stringify(DEFAULT_CLASSES));
+      return DEFAULT_CLASSES;
+    } catch {
+      return DEFAULT_CLASSES;
+    }
+  }
+
+  public static addClass(className: string): string[] {
+    const clean = className.trim();
+    if (!clean) return this.getClasses();
+    const classes = this.getClasses();
+    if (!classes.some(c => c.toLowerCase() === clean.toLowerCase())) {
+      classes.push(clean);
+      localStorage.setItem(CLASSES_KEY, JSON.stringify(classes));
+    }
+    return classes;
+  }
+
+  public static deleteClass(className: string): string[] {
+    const classes = this.getClasses().filter(c => c.toLowerCase() !== className.toLowerCase());
+    localStorage.setItem(CLASSES_KEY, JSON.stringify(classes));
+    return classes;
   }
 }

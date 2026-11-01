@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { StorageService } from '../services/storageService';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -43,6 +44,15 @@ export default function PaymentModal({ open, onOpenChange, onSuccess }: PaymentM
     setIsProcessing(true);
 
     setTimeout(() => {
+      StorageService.recordPayment({
+        userEmail: user?.email || 'candidate@learnready.in',
+        userName: user?.name || user?.email.split('@')[0] || 'Candidate',
+        amount: 899,
+        currency: 'INR',
+        method: payMethod,
+        transactionRef: `${payMethod.toUpperCase()}-TXN-${Date.now()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`,
+        status: 'confirmed',
+      });
       upgradeToPro();
       setIsProcessing(false);
       setPaymentComplete(true);

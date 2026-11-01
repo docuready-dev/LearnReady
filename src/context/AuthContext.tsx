@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useRef } from 'r
 import { StorageService } from '../services/storageService';
 
 export const ADMIN_EMAIL = 'ashleyghose64@gmail.com';
+export const ADMIN_PASSWORD = 'Ashley@$#1995';
 
 export interface User {
   email: string;
@@ -25,8 +26,7 @@ interface AuthContextValue {
   openAdminModal: () => void;
   closeAdminModal: () => void;
   handleLogoClick: () => void;
-  sendAdminMagicLink: (email: string) => { success: boolean; message: string; magicUrl?: string; token?: string };
-  verifyMagicToken: (token: string, email: string) => boolean;
+  loginAdminWithPassword: (email: string, password: string) => { success: boolean; message: string };
   login: (email: string, name?: string) => void;
   register: (data: { name: string; email: string; phone: string; password?: string; grade?: string; board?: string; school?: string }) => void;
   requestPasswordReset: (email: string) => { success: boolean; message: string };
@@ -41,7 +41,6 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 const AUTH_STORAGE_KEY = 'learnready_auth_session';
-const MAGIC_STORAGE_KEY = 'learnready_admin_magic_token';
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -158,58 +157,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     StorageService.saveUserAccount(updatedUser as any);
   };
 
-  const sendAdminMagicLink = (email: string) => {
+  const loginAdminWithPassword = (email: string, passwordInput: string) => {
     if (email.trim().toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
       return {
         success: false,
-        message: `Unauthorized email address. The administration gateway is exclusively reserved for ${ADMIN_EMAIL}.`,
+        message: `Access denied. Administration portal is reserved exclusively for ${ADMIN_EMAIL}.`,
+      };
+    }
+    if (passwordInput !== ADMIN_PASSWORD) {
+      return {
+        success: false,
+        message: 'Invalid administrator password. Access denied.',
       };
     }
 
-    const token = btoa(Date.now() + ':' + Math.random().toString(36).substring(2, 12));
-    const expiresAt = Date.now() + 15 * 60 * 1000; // 15 minutes validity
-    localStorage.setItem(MAGIC_STORAGE_KEY, JSON.stringify({ token, email: ADMIN_EMAIL, expiresAt }));
-
-    const baseUrl = window.location.origin + window.location.pathname;
-    const magicUrl = `${baseUrl}#magic_token=${encodeURIComponent(token)}&email=${encodeURIComponent(ADMIN_EMAIL)}`;
-
-    // Trigger real mailto intent
-    try {
-      const subject = encodeURIComponent('LearnReady Admin — One-Time Magic Login Link');
-      const body = encodeURIComponent(
-        `Hello Ashley,\n\nHere is your secure, one-time authentication link to access the LearnReady Admin Console:\n\n${magicUrl}\n\nThis link is valid for 15 minutes.\n\nLearnReady Security`
-      );
-      window.open(`mailto:${ADMIN_EMAIL}?subject=${subject}&body=${body}`, '_blank');
-    } catch {}
-
+    login(ADMIN_EMAIL, 'Ashley Ghose');
     return {
       success: true,
-      message: `Magic Link dispatched to ${ADMIN_EMAIL}`,
-      magicUrl,
-      token,
+      message: 'Admin authorization granted.',
     };
   };
 
-  const verifyMagicToken = (token: string, email: string): boolean => {
-    if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) return false;
-    try {
-      const storedStr = localStorage.getItem(MAGIC_STORAGE_KEY);
-      if (!storedStr) return false;
-      const stored = JSON.parse(storedStr);
-      if (stored.token === token && stored.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-        if (Date.now() > stored.expiresAt) {
-          localStorage.removeItem(MAGIC_STORAGE_KEY);
-          return false;
-        }
-        localStorage.removeItem(MAGIC_STORAGE_KEY);
-        login(ADMIN_EMAIL, 'Ashley Ghose');
-        return true;
-      }
-    } catch {}
-    return false;
-  };
-
-  // URL Magic link listener on startup and hash change
   useEffect(() => {
     try {
       const stored = localStorage.getItem(AUTH_STORAGE_KEY);
@@ -221,24 +189,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-
-    function checkUrlForMagicLink() {
-      const hash = window.location.hash;
-      const search = window.location.search;
-      const params = new URLSearchParams(hash.startsWith('#') ? hash.slice(1) : search);
-      const token = params.get('magic_token');
-      const email = params.get('email');
-
-      if (token && email && email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-        if (verifyMagicToken(token, email)) {
-          window.history.replaceState(null, '', window.location.pathname);
-        }
-      }
-    }
-
-    checkUrlForMagicLink();
-    window.addEventListener('hashchange', checkUrlForMagicLink);
-    return () => window.removeEventListener('hashchange', checkUrlForMagicLink);
   }, []);
 
   const loginWithRedirect = (emailToUse?: string) => {
@@ -266,8 +216,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         openAdminModal,
         closeAdminModal,
         handleLogoClick,
-        sendAdminMagicLink,
-        verifyMagicToken,
+        loginAdminWithPassword,
         login,
         register,
         requestPasswordReset,

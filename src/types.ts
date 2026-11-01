@@ -103,3 +103,15 @@ export interface UserAccount {
   trialEndsAt?: number;
   isPaidPro?: boolean;
 }
+
+export interface PaymentRecord {
+  id: string;
+  userEmail: string;
+  userName: string;
+  amount: number;
+  currency: string;
+  method: 'upi' | 'card' | 'manual';
+  transactionRef: string;
+  status: 'confirmed' | 'refunded' | 'pending';
+  date: string;
+}
