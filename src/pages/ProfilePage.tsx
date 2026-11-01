@@ -36,7 +36,7 @@ const LOGO_URL = `${import.meta.env.BASE_URL}logo.svg`;
 
 const EDUCATION_LEVELS = [
   'Class 9',
-  'Class 10 (Current)',
+  'Class 10',
   'Class 11',
   'Class 12',
   'Undergraduate',
@@ -49,7 +49,7 @@ export default function ProfilePage() {
 
   // Form states
   const [name, setName] = useState(user?.name || '');
-  const [grade, setGrade] = useState(user?.grade || 'Class 10 (Current)');
+  const [grade, setGrade] = useState(user?.grade?.replace(/\s*\(Current\)/gi, '').trim() || 'Class 10');
   const [board, setBoard] = useState(user?.board || 'CBSE');
   const [school, setSchool] = useState(user?.school || '');
   const [isSaving, setIsSaving] = useState(false);
@@ -67,7 +67,7 @@ export default function ProfilePage() {
   useEffect(() => {
     if (user) {
       setName(user.name || '');
-      setGrade(user.grade || 'Class 10 (Current)');
+      setGrade(user.grade?.replace(/\s*\(Current\)/gi, '').trim() || 'Class 10');
       setBoard(user.board || 'CBSE');
       setSchool(user.school || '');
     }
@@ -296,7 +296,7 @@ export default function ProfilePage() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
                 <div className="space-y-1.5 text-left">
                   <Label className="text-sm font-semibold text-foreground flex items-center gap-2 text-left">
-                    <GraduationCap className="w-4 h-4 text-muted-foreground" />Current Class / Level
+                    <GraduationCap className="w-4 h-4 text-muted-foreground" />Class / Level
                   </Label>
                   <Select value={grade} onValueChange={setGrade}>
                     <SelectTrigger className="h-11 text-sm text-left">

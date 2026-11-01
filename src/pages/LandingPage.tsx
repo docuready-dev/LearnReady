@@ -18,8 +18,8 @@ const LOGO_URL = `${import.meta.env.BASE_URL}logo.svg`;
 const DRAFT_FORM_KEY = 'learnready_landing_draft';
 
 const REGIONS = ['North India', 'Northeast India', 'East India', 'Central India', 'West India', 'South India', 'International'];
-const EDUCATION_LEVELS = ['Class 9', 'Class 10 (Current)', 'Class 11', 'Class 12', 'Undergraduate', 'Graduate'];
-const QUICK_ELIGIBLE = ['Class 9', 'Class 10 (Current)'];
+const EDUCATION_LEVELS = ['Class 9', 'Class 10', 'Class 11', 'Class 12', 'Undergraduate', 'Graduate'];
+const QUICK_ELIGIBLE = ['Class 9', 'Class 10'];
 
 const SECTIONS_INFO = [
   { label: 'Verbal Ability', desc: 'English comprehension, vocabulary, and logical analogies', cls: 'bg-muted/50 text-foreground border-border' },
@@ -61,7 +61,7 @@ export default function LandingPage() {
           name: p.name || state.name || user?.name || '',
           age: p.age || state.age || '',
           region: p.region || state.region || '',
-          educationLevel: p.educationLevel || state.educationLevel || user?.grade || '',
+          educationLevel: (p.educationLevel || state.educationLevel || user?.grade || '').replace(/\s*\(Current\)/gi, '').trim(),
           board: p.board || state.board || user?.board || '',
           candidateId: p.candidateId || state.candidateId || '',
           email: p.email || state.email || user?.email || '',
@@ -73,7 +73,7 @@ export default function LandingPage() {
       name: state.name || user?.name || '',
       age: state.age || '',
       region: state.region || '',
-      educationLevel: state.educationLevel || user?.grade || '',
+      educationLevel: (state.educationLevel || user?.grade || '').replace(/\s*\(Current\)/gi, '').trim(),
       board: state.board || user?.board || '',
       candidateId: state.candidateId || '',
       email: state.email || user?.email || '',
@@ -94,7 +94,7 @@ export default function LandingPage() {
         name: p.name || user.name || '',
         email: p.email || user.email || '',
         phone: p.phone || user.phone || '',
-        educationLevel: p.educationLevel || user.grade || '',
+        educationLevel: (p.educationLevel || user.grade || '').replace(/\s*\(Current\)/gi, '').trim(),
         board: p.board || user.board || '',
       }));
     }

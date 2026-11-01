@@ -214,7 +214,7 @@ export default function AdminPage() {
     setEditingUser(u);
     setEditUserName(u.name || '');
     setEditUserPhone(u.phone || '');
-    setEditUserGrade(u.grade || 'Class 10 (Current)');
+    setEditUserGrade(u.grade?.replace(/\s*\(Current\)/gi, '').trim() || 'Class 10');
     setEditUserBoard(u.board || 'CBSE');
     setEditUserSchool(u.school || '');
   }

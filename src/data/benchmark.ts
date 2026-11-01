@@ -46,7 +46,7 @@ function normalRandom(rand: () => number, mean: number, std: number): number {
 }
 
 const REGIONS = ['North India', 'Northeast India', 'East India', 'Central India', 'West India', 'South India', 'International'];
-const EDUCATION_LEVELS = ['Class 9', 'Class 10 (Current)', 'Class 11', 'Class 12', 'Undergraduate', 'Graduate'];
+const EDUCATION_LEVELS = ['Class 9', 'Class 10', 'Class 11', 'Class 12', 'Undergraduate', 'Graduate'];
 const PERSONALITIES: Array<BenchmarkStudent['personality']> = ['Analytical', 'Creative', 'Operational'];
 const BENCHMARK_SIZE = 2500;
 const DOMAIN_MEAN = 50;

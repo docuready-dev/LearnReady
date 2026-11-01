@@ -182,7 +182,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const stored = localStorage.getItem(AUTH_STORAGE_KEY);
       if (stored) {
-        setUser(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        if (parsed && parsed.grade) {
+          parsed.grade = parsed.grade.replace(/\s*\(Current\)/gi, '').trim();
+        }
+        setUser(parsed);
       }
     } catch (e) {
       console.error('Failed to parse auth session', e);

@@ -9,7 +9,7 @@ const SUBJECTS_KEY = 'learnready_subjects_v1';
 const CLASSES_KEY = 'learnready_classes_v1';
 
 const DEFAULT_SUBJECTS = ['Mathematics', 'Physics', 'Chemistry', 'Biology', 'Commerce & Accountancy', 'English Language'];
-const DEFAULT_CLASSES = ['Class 9', 'Class 10 (Current)', 'Class 11', 'Class 12', 'Undergraduate / Dropper'];
+const DEFAULT_CLASSES = ['Class 9', 'Class 10', 'Class 11', 'Class 12', 'Undergraduate / Dropper'];
 
 export class StorageService {
   private static getRawRecords(): ExamResultRecord[] {
@@ -104,7 +104,12 @@ export class StorageService {
   public static getUserAccounts(): UserAccount[] {
     try {
       const data = localStorage.getItem(ACCOUNTS_KEY);
-      return data ? JSON.parse(data) : [];
+      if (!data) return [];
+      const accounts = JSON.parse(data) as UserAccount[];
+      return accounts.map(a => ({
+        ...a,
+        grade: a.grade ? a.grade.replace(/\s*\(Current\)/gi, '').trim() : a.grade,
+      }));
     } catch {
       return [];
     }
@@ -336,7 +341,14 @@ export class StorageService {
   public static getClasses(): string[] {
     try {
       const data = localStorage.getItem(CLASSES_KEY);
-      if (data) return JSON.parse(data);
+      if (data) {
+        const parsed = JSON.parse(data) as string[];
+        const sanitized = Array.from(new Set(parsed.map(c => c.replace(/\s*\(Current\)/gi, '').trim()).filter(Boolean)));
+        if (JSON.stringify(sanitized) !== data) {
+          localStorage.setItem(CLASSES_KEY, JSON.stringify(sanitized));
+        }
+        return sanitized;
+      }
       localStorage.setItem(CLASSES_KEY, JSON.stringify(DEFAULT_CLASSES));
       return DEFAULT_CLASSES;
     } catch {

@@ -29,7 +29,7 @@ const LOGO_URL = `${import.meta.env.BASE_URL}logo.svg`;
 
 const EDUCATION_LEVELS = [
   'Class 9',
-  'Class 10 (Current)',
+  'Class 10',
   'Class 11',
   'Class 12',
   'Undergraduate / Dropper'
@@ -57,7 +57,7 @@ export default function LoginPage() {
   const [regEmail, setRegEmail] = useState('');
   const [regPhone, setRegPhone] = useState('');
   const [regPassword, setRegPassword] = useState('');
-  const [regGrade, setRegGrade] = useState('Class 10 (Current)');
+  const [regGrade, setRegGrade] = useState('Class 10');
   const [regBoard, setRegBoard] = useState('CBSE');
   const [regSchool, setRegSchool] = useState('');
 
@@ -518,7 +518,7 @@ export default function LoginPage() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
                       <div className="space-y-1.5 text-left">
-                        <Label className="text-sm font-semibold text-foreground text-left">Current Class *</Label>
+                        <Label className="text-sm font-semibold text-foreground text-left">Class / Level *</Label>
                         <Select value={regGrade} onValueChange={setRegGrade}>
                           <SelectTrigger className="h-11 text-sm text-left">
                             <SelectValue placeholder="Select class" />
